@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useSpotify } from "./hooks/useSpotify";
+import { useSpotify } from "hooks/useSpotify";
 
 const ProtectedLayout = () => {
   const { user, loading } = useSpotify();

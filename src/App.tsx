@@ -1,11 +1,13 @@
 import { Routes, Route } from "react-router-dom";
-import ProtectedLayout from "./ProtectedLayout";
-import Home from "./pages/Home";
-import { SpotifyProvider } from "./context/SpotifyProvider";
+import ProtectedLayout from "components/Layouts/ProtectedLayout";
+import Home from "pages/Home";
+import { SpotifyProvider } from "context/SpotifyProvider";
+import GlobalStyles from "styles/GlobalStyles";
 
 function App() {
   return (
     <SpotifyProvider>
+      <GlobalStyles />
       <Routes>
         {/* Public */}
         <Route path="/" element={<ProtectedLayout />} />

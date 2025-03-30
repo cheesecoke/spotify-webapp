@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
-import { getSpotifySDK } from "../lib/spotify";
-import { SpotifyContext } from "../hooks/useSpotify";
+import { useState, useEffect } from "react";
+import { getSpotifySDK } from "lib/spotify";
+import { SpotifyContext } from "hooks/useSpotify";
 import { useNavigate } from "react-router-dom";
 
 export function SpotifyProvider({ children }: { children: React.ReactNode }) {

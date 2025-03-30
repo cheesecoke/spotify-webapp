@@ -1,37 +1,21 @@
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 
+//TODO: Not mixes but going to come back to this
 export const getTopMixes = async (sdk: SpotifyApi) => {
   try {
-    const topArtistsResponse = await sdk.currentUser.topItems(
+    const response = await sdk.currentUser.topItems(
       "artists",
       "short_term",
-      5,
+      20,
     );
-    const seedArtistIds = topArtistsResponse.items.map((artist) => artist.id);
-
-    const topTracksResponse = await sdk.currentUser.topItems(
-      "tracks",
-      "short_term",
-      5,
-    );
-    const seedTrackIds = topTracksResponse.items.map((track) => track.id);
-
-    const recommendations = await sdk.recommendations.get({
-      seed_artists: seedArtistIds.slice(0, 2), // up to 5 total seeds allowed
-      seed_tracks: seedTrackIds.slice(0, 3),
-      limit: 20,
-    });
-
-    const mixes = recommendations.tracks.map((track) => ({
-      id: track.id,
-      title: track.name,
-      image: track.album.images?.[0]?.url,
-      description: track.artists.map((artist) => artist.name).join(", "),
+    return response.items.map((artist) => ({
+      id: artist.id,
+      name: artist.name,
+      image: artist.images?.[0]?.url || "",
+      type: artist.type,
     }));
-
-    return mixes;
   } catch (error) {
-    console.error("Error fetching top mixes:", error);
+    console.error("Failed to fetch top mixes:", error);
     return [];
   }
 };
