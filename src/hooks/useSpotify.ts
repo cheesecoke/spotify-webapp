@@ -4,7 +4,6 @@ type SpotifyContextType = {
   user: any;
   loading: boolean;
   sdk: any;
-  getSdkAndUser: () => Promise<void>;
 };
 
 export const SpotifyContext = createContext<SpotifyContextType | null>(null);

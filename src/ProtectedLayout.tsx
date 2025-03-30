@@ -2,9 +2,10 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useSpotify } from "./hooks/useSpotify";
 
 const ProtectedLayout = () => {
-  const { user } = useSpotify();
+  const { user, loading } = useSpotify();
 
-  if (!user) return <Navigate to="/login" replace />;
+  if (loading) return null;
+  if (!user) return <Navigate to="/" replace />;
 
   return <Outlet />;
 };

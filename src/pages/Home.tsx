@@ -96,6 +96,26 @@ const Home = () => {
           {/* {JSON.stringify(topTracks, null, 2)} */}
         </pre>
       </section>
+
+      <section>
+        <button
+          onClick={() => {
+            localStorage.clear();
+            window.location.href = "/login";
+          }}
+          style={{
+            marginTop: "2rem",
+            padding: "0.5rem 1rem",
+            backgroundColor: "#ef4444",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          Sign Out
+        </button>
+      </section>
     </div>
   );
 };

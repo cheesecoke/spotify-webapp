@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import ProtectedLayout from "./ProtectedLayout";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
 import { SpotifyProvider } from "./context/SpotifyProvider";
 
 function App() {
@@ -9,8 +8,7 @@ function App() {
     <SpotifyProvider>
       <Routes>
         {/* Public */}
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<ProtectedLayout />} />
 
         {/* Protected Layout */}
         <Route path="/home" element={<ProtectedLayout />}>
