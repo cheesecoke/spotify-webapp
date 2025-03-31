@@ -13,12 +13,13 @@ export function SpotifyProvider({ children }: { children: React.ReactNode }) {
     const hasAuthCode = window.location.search.includes("code=");
     const run = async () => {
       try {
-        console.log("getSdkAndUser: start");
         const sdkInstance = getSpotifySDK();
         setSdk(sdkInstance);
         const profile = await sdkInstance.currentUser.profile();
         setUser(profile);
-        navigate("/home", { replace: true });
+        if (user && location.pathname === "/") {
+          navigate("/home", { replace: true });
+        }
       } catch (err) {
         console.error("SDK Error:", err);
         localStorage.clear();

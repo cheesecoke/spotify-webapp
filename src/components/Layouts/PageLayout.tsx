@@ -3,14 +3,19 @@ import { NavBar } from "components/NavBar";
 import { ContentLayout } from "./ContentLayout";
 
 const PageLayout: React.FC<{
+  overflow?: boolean;
   pageHeading?: React.ReactNode;
   topElement?: React.ReactNode;
   children: React.ReactNode;
-}> = ({ pageHeading, topElement, children }) => {
+}> = ({ overflow, pageHeading = null, topElement = null, children }) => {
   return (
     <>
       <NavBar />
-      <ContentLayout pageHeading={pageHeading} topElement={topElement}>
+      <ContentLayout
+        overflow={overflow}
+        pageHeading={pageHeading}
+        topElement={topElement}
+      >
         {children}
       </ContentLayout>
     </>
