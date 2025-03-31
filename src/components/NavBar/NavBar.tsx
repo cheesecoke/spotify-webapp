@@ -8,6 +8,7 @@ import {
   Name,
 } from "./NavBar.styles";
 
+// TODO: Needs a responsive design.
 const NavBar: React.FC = () => {
   return (
     <NavBarContainer>

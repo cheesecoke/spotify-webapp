@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import ProtectedLayout from "components/Layouts/ProtectedLayout";
-import Home from "pages/Home";
+import Home from "pages/Home/Home";
 import { SpotifyProvider } from "context/SpotifyProvider";
 import GlobalStyles from "styles/GlobalStyles";
 
