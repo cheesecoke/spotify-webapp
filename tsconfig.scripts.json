@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["DOM", "ES2023"],
+    "module": "commonjs",
+    "skipLibCheck": true,
+    "jsx": "react",
+    "types": ["react", "node"],
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "noEmit": false,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["scripts/**/*"]
+}
