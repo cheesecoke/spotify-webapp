@@ -20,6 +20,22 @@ const GlobalStyles = () => (
         color: ${NightTextPrimary};
       }
 
+      h1 {
+        font-size: 24px;
+      }
+
+      h2 {
+        font-size: 18px;
+      }
+
+      h3 {
+        font-size: 16px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+
       a {
         text-decoration: none;
         color: inherit;

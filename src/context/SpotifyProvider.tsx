@@ -10,7 +10,7 @@ export function SpotifyProvider({ children }: { children: React.ReactNode }) {
   const [sdk, setSdk] = useState<any>(null);
 
   useEffect(() => {
-    const hasAuthCode = window.location.search.includes("code=");
+    const hasAuthCode = new URLSearchParams(window.location.search).has("code");
     const run = async () => {
       try {
         const sdkInstance = getSpotifySDK();

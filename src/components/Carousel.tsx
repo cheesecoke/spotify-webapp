@@ -34,7 +34,13 @@ const Carousel = ({ heading, items }: { heading?: string; items: [] }) => (
     )}
     <List>
       {items?.map((item: any, index: number) => (
-        <Card key={index} item={item} />
+        <Card
+          key={index}
+          imageUrl={item.image}
+          imageAlt={item.trackTitle}
+          title={item.trackTitle}
+          description={item.artistName}
+        />
       ))}
     </List>
   </Container>

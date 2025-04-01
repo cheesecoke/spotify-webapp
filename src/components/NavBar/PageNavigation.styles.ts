@@ -13,7 +13,7 @@ export const Container = styled.div`
 `;
 
 export const Item = styled.div<{ isActive: boolean }>`
-  font-size: 22px;
+  font-size: 18px;
   font-style: normal;
   font-weight: 500;
   line-height: normal;

@@ -20,7 +20,7 @@ export const Image = styled.img`
 
 export const Description = styled.div``;
 
-export const CardTitle = styled.h3`
+export const Title = styled.h3`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -33,7 +33,6 @@ export const Text = styled.p`
   overflow: hidden;
   text-overflow: ellipsis;
 
-  font-size: 18px;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
