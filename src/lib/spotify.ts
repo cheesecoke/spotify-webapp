@@ -11,6 +11,7 @@ export function getSpotifySDK() {
       "user-library-read",
       "user-read-recently-played",
       "user-top-read",
+      "user-read-playback-position",
     ],
   );
 }

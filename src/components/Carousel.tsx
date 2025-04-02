@@ -24,7 +24,12 @@ export const List = styled.div`
 // TODO: Title links to a page
 export const Title = styled.h2``;
 
-const Carousel = ({ heading, items }: { heading?: string; items: [] }) => (
+type CarouselProps = {
+  heading?: string;
+  items: any[];
+};
+
+const Carousel = ({ heading, items }: CarouselProps) => (
   <Container>
     {heading && (
       <Heading>
@@ -37,9 +42,9 @@ const Carousel = ({ heading, items }: { heading?: string; items: [] }) => (
         <Card
           key={index}
           imageUrl={item.image}
-          imageAlt={item.trackTitle}
-          title={item.trackTitle}
-          description={item.artistName}
+          imageAlt={item.trackTitle || item.title}
+          title={item.trackTitle || item.title}
+          description={item.artistName || item.description}
         />
       ))}
     </List>

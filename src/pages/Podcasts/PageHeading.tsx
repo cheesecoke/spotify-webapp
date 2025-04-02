@@ -5,7 +5,7 @@ const Wrapper = styled.h1`
 `;
 
 const PageHeading = () => {
-  return <Wrapper>Good Morning</Wrapper>;
+  return <Wrapper>Podcasts</Wrapper>;
 };
 
 export default PageHeading;
