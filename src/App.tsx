@@ -6,6 +6,7 @@ import Home from "pages/Home";
 import Browse from "pages/Browse";
 import Library from "pages/Library";
 import Podcasts from "./pages/Podcasts/Podcasts";
+import Audiobooks from "./pages/Audiobooks/Audiobooks";
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
           <Route path="browse" element={<Browse />} />
           <Route path="library" element={<Library />} />
           <Route path="Podcasts" element={<Podcasts />} />
-        </Route>
+            <Route path="Audiobooks" element={<Audiobooks />} />
+</Route>
       </Routes>
     </SpotifyProvider>
   );

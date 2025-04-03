@@ -1,3 +1,4 @@
+// Remove
 import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 
 export async function getRecentlyPlayed(sdk: SpotifyApi) {
@@ -24,7 +25,6 @@ export async function getRecentlyPlayed(sdk: SpotifyApi) {
     }
 
     const recentTracks = await response.json();
-    console.log("Recent tracks:", recentTracks);
 
     return recentTracks.items.map((item: any) => {
       const track = item.track;

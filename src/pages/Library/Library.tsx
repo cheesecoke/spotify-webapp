@@ -67,13 +67,7 @@ const Library = () => {
         }));
 
         const resSavedTracks = await sdk.currentUser.tracks.savedTracks();
-        console.log("resSavedTracks:", resSavedTracks);
         const totalTracks = resSavedTracks.total;
-
-        console.log("Playlists:res:", res);
-        console.log("Playlists:", items);
-
-        console.log("SavedTracks:", totalTracks);
 
         setPlaylists(items);
         setTotalTracks(totalTracks);

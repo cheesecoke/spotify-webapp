@@ -7,7 +7,7 @@ export const Container = styled.div`
 `;
 
 export const SearchIconContainer = styled.div`
-  padding: 32px 26px;
+  padding: 20px 20px 20px 0;
   gap: 10px;
   cursor: pointer;
 `;

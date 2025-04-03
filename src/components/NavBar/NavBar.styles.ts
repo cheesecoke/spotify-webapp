@@ -9,15 +9,14 @@ export const NavBarContainer = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 100px;
-  padding: 1rem;
+  height: 80px;
+  padding: 0 30px;
   background-color: ${NightBackgroundPrimary};
 `;
 
 export const NavRight = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
 `;
 
 // TODO: Profile Image.

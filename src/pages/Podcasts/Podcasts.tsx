@@ -18,6 +18,7 @@ const Podcasts = () => {
           title: item.episode.name,
           image: item.episode.images[0]?.url,
           description: item.episode.description,
+          uri: item.episode.uri,
         }));
 
         setPodcasts(items);

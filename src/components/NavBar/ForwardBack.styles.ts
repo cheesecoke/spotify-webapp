@@ -6,7 +6,7 @@ import {
 
 export const ForwardBackContainer = styled.div`
   display: flex;
-  padding: 30px;
+  padding: 20px;
   align-items: flex-start;
   gap: 20px;
 `;

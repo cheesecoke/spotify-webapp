@@ -8,8 +8,8 @@ import {
 export const Container = styled.div`
   display: flex;
   align-items: center;
-  gap: 30px;
-  padding: 0 30px;
+  gap: 20px;
+  padding: 0 20px;
 `;
 
 export const Item = styled.div<{ isActive: boolean }>`
