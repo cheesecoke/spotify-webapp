@@ -55,8 +55,7 @@ const Library = () => {
     const getPlaylists = async () => {
       if (!sdk) return;
       try {
-        // TODO: Wrong Data
-        const res = await sdk.playlists.getUsersPlaylists("me", 18);
+        const res = await sdk.currentUser.playlists.playlists();
         const items = res.items.map((playlist: any) => ({
           id: playlist.id,
           owner: playlist.owner?.display_name,

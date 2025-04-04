@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import { useSpotifyPlayer } from "context/PlayerProvider";
 import { useSpotify } from "hooks/useSpotify";
 import { getRecentlyPlayed } from "api/spotify/recently-played";
-import { getTopMixes } from "api/spotify/top-mixes";
 import PageLayout from "components/Layouts/PageLayout";
 import Carousel from "components/Carousel";
 import PageHeading from "./PageHeading";
@@ -9,24 +9,78 @@ import TopElement from "./TopElement";
 
 const Home = () => {
   const { sdk, loading } = useSpotify();
+  const { player, deviceId } = useSpotifyPlayer();
   const [recentlyPlayed, setRecentlyPlayed] = useState<any>(null);
-  const [topMixes, setTopMixes] = useState<any>(null);
-  const [topItems, setTopItems] = useState<any[]>([]); // TODO: Add Real Data.
+  const [topItems, setTopItems] = useState<any[]>([]);
+  const [topMixes, setTopMixes] = useState<any[]>([]);
+  const [topArtistName, setTopArtistName] = useState<string>("");
+  const [topArtistSearch, setTopArtistSearch] = useState<any[]>([]);
+
+  const handlePlay = (uri?: string) => {
+    if (!uri) return;
+    console.log("Playing", uri);
+    console.log("Device ID", deviceId);
+    console.log("Player", player);
+    if (!player || !deviceId) return;
+
+    if (uri.startsWith("spotify:artist")) {
+      console.log("Can't play artist URI directly. Fetch top tracks instead.");
+    }
+
+    player._options.getOAuthToken((token: string) => {
+      fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          uris: ["spotify:track:3n3Ppam7vgaVa1iaRUc9Lp"],
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Make sure to pass token for callback
+        },
+      })
+        .then((res) => {
+          if (!res.ok) {
+            console.error("Playback failed:", res.status, res.statusText);
+          } else {
+            console.log("Playback started");
+          }
+        })
+        .catch((err) => {
+          console.error("Fetch error:", err);
+        });
+    });
+  };
 
   useEffect(() => {
     if (!sdk || loading) return;
 
-    //TODO: Get data for specific carousels
-    // For now, we'll just use the same recently played for all carousels
     const loadData = async () => {
+      // TODO: Move
+      function makeItems(items: any[]) {
+        return items.map((item) => ({
+          id: item.id,
+          title: item.name,
+          image: item.images[0]?.url,
+          description: item.description,
+          uri: item.uri,
+        }));
+      }
+
+      // CAROUSEL 1
+      const res = await sdk.currentUser.topItems("tracks", "short_term", 1);
+      const topArtist = res.items[0].artists[0];
+      const artistName = topArtist.name;
+      setTopArtistName(artistName);
+      const moreArtist = await sdk.search(artistName, ["artist"]);
+      setTopArtistSearch(makeItems(moreArtist.artists.items));
+
+      // CAROUSEL 2
+      const playlistsRes = await sdk.currentUser.playlists.playlists(10);
+      setTopMixes(makeItems(playlistsRes.items));
+
+      // CAROUSEL 3
       const recent = await getRecentlyPlayed(sdk);
       setRecentlyPlayed(recent);
-
-      const mixes = await getTopMixes(sdk);
-      setTopMixes(mixes);
-
-      const filteredTopItems = recent.splice(0, 6);
-      setTopItems(filteredTopItems);
     };
 
     loadData();
@@ -38,13 +92,18 @@ const Home = () => {
       topElement={<TopElement items={topItems} />}
     >
       <Carousel
-        heading="Dev Lemons & Max Motley talk Lorem"
-        items={recentlyPlayed}
+        onClick={handlePlay}
+        heading={topArtistName ? `More like ${topArtistName}` : "Top Artist"}
+        items={topArtistSearch}
       />
-      <Carousel heading="Your Top Mixes" items={recentlyPlayed} />
-      <Carousel heading="Recently Played" items={recentlyPlayed} />
       <Carousel
-        heading="Based on your recent listening"
+        onClick={handlePlay}
+        heading="Your Top Mixes"
+        items={topMixes}
+      />
+      <Carousel
+        onClick={handlePlay}
+        heading="Recently Played"
         items={recentlyPlayed}
       />
       <button

@@ -32,7 +32,7 @@ export function SpotifyProvider({ children }: { children: React.ReactNode }) {
     } else {
       setLoading(false);
     }
-  }, [navigate, user]);
+  }, [user]);
 
   return (
     <SpotifyContext.Provider value={{ user, loading, sdk }}>

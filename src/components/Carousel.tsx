@@ -27,28 +27,33 @@ export const Title = styled.h2``;
 type CarouselProps = {
   heading?: string;
   items: any[];
+  onClick?: (uri?: string) => void;
 };
 
-const Carousel = ({ heading, items }: CarouselProps) => (
-  <Container>
-    {heading && (
-      <Heading>
-        <Title>{heading}</Title>
-        <ChevronRightIcon />
-      </Heading>
-    )}
-    <List>
-      {items?.map((item: any, index: number) => (
-        <Card
-          key={index}
-          imageUrl={item.image}
-          imageAlt={item.trackTitle || item.title}
-          title={item.trackTitle || item.title}
-          description={item.artistName || item.description}
-        />
-      ))}
-    </List>
-  </Container>
-);
+const Carousel = ({ heading, items, onClick }: CarouselProps) => {
+  return (
+    <Container>
+      {heading && (
+        <Heading>
+          <Title>{heading}</Title>
+          <ChevronRightIcon />
+        </Heading>
+      )}
+      <List>
+        {items?.map((item: any, index: number) => (
+          <Card
+            key={index}
+            imageUrl={item.image}
+            imageAlt={item.trackTitle || item.title}
+            title={item.trackTitle || item.title}
+            description={item.artistName || item.description}
+            uri={item.uri}
+            onClick={onClick}
+          />
+        ))}
+      </List>
+    </Container>
+  );
+};
 
 export default Carousel;

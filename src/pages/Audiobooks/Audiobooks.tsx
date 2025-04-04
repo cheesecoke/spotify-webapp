@@ -79,7 +79,6 @@ const Audiobooks = () => {
 
   return (
     <PageLayout overflow={true} pageHeading={<PageHeading />}>
-      <></>
       <Carousel
         heading="Great first audiobooks"
         items={audiobooks.newAudiobooks.slice(0, 10)}

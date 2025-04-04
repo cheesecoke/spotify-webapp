@@ -12,6 +12,10 @@ export function getSpotifySDK() {
       "user-read-recently-played",
       "user-top-read",
       "user-read-playback-position",
+      "streaming",
+      "user-modify-playback-state",
+      "user-read-playback-state",
+      "app-remote-control",
     ],
   );
 }
