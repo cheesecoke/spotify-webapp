@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import LibraryNavigation from "./LibraryNavigation";
+import PageNavigation from "../../components/PageNavigation";
 
 export const Heading = styled.h1`
   margin: 0 30px;
@@ -8,7 +8,7 @@ export const Heading = styled.h1`
 const PageHeading = () => {
   return (
     <>
-      <LibraryNavigation />
+      <PageNavigation />
       <Heading>Playlist</Heading>
     </>
   );

@@ -9,7 +9,7 @@ const PageHeading = () => {
   return (
     <>
       <PageNavigation />
-      <Wrapper>Audiobooks</Wrapper>;
+      <Wrapper>Artists</Wrapper>;
     </>
   );
 };

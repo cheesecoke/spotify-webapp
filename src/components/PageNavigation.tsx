@@ -53,7 +53,7 @@ const TabData = [
   },
 ];
 
-const LibraryNavigation = () => {
+const PageNavigation = () => {
   const navigate = useNavigate();
   return (
     <Tabs>
@@ -66,4 +66,4 @@ const LibraryNavigation = () => {
   );
 };
 
-export default LibraryNavigation;
+export default PageNavigation;

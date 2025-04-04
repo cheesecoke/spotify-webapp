@@ -8,6 +8,8 @@ import Browse from "pages/Browse";
 import Library from "pages/Library";
 import Podcasts from "./pages/Podcasts/Podcasts";
 import Audiobooks from "./pages/Audiobooks/Audiobooks";
+import Artists from "./pages/Artists/Artists";
+import Albums from "./pages/Albums/Albums";
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
             <Route path="library" element={<Library />} />
             <Route path="podcasts" element={<Podcasts />} />
             <Route path="audiobooks" element={<Audiobooks />} />
+            <Route path="artists" element={<Artists />} />
+            <Route path="albums" element={<Albums />} />
           </Route>
         </Routes>
       </PlayerProvider>
