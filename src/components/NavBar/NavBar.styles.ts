@@ -27,6 +27,7 @@ export const ProfileContainer = styled.div`
   justify-content: center;
   align-items: center;
   padding: 4px;
+  margin-left: 20px;
   gap: 10px;
   border-radius: 40px;
   color: ${NightTextPrimary};
@@ -46,5 +47,10 @@ export const Avatar = styled.div`
 `;
 
 export const Name = styled.span`
+  display: flex;
   margin-right: 10px;
+
+  @media (max-width: 780px) {
+    display: none;
+  }
 `;
