@@ -16,6 +16,7 @@ export const Heading = styled.div`
 
 export const List = styled.div`
   display: flex;
+  min-height: 250px;
   overflow-x: auto;
   white-space: nowrap;
   gap: 20px;
@@ -28,9 +29,10 @@ type CarouselProps = {
   heading?: string;
   items: any[];
   onClick?: (uri?: string) => void;
+  loading?: boolean;
 };
 
-const Carousel = ({ heading, items, onClick }: CarouselProps) => {
+const Carousel = ({ heading, items, onClick, loading }: CarouselProps) => {
   return (
     <Container>
       {heading && (
@@ -40,17 +42,21 @@ const Carousel = ({ heading, items, onClick }: CarouselProps) => {
         </Heading>
       )}
       <List>
-        {items?.map((item: any, index: number) => (
-          <Card
-            key={index}
-            imageUrl={item.image}
-            imageAlt={item.trackTitle || item.title}
-            title={item.trackTitle || item.title}
-            description={item.artistName || item.description}
-            uri={item.uri}
-            onClick={onClick}
-          />
-        ))}
+        {loading || !items || items.length === 0
+          ? Array.from({ length: 5 }).map((_, index) => (
+              <Card key={`skeleton-${index}`} loading />
+            ))
+          : items.map((item: any, index: number) => (
+              <Card
+                key={index}
+                imageUrl={item.image}
+                imageAlt={item.imageAlt}
+                title={item.title}
+                description={item.description}
+                uri={item.uri}
+                onClick={onClick}
+              />
+            ))}
       </List>
     </Container>
   );

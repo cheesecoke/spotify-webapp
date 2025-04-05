@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
-import { NightTransparentSecondary } from "styles/colors";
+import { NightTransparentSecondary, SkeletonBackground } from "styles/colors";
+import { SkeletonAnimation } from "styles/animations";
 
 export const ItemWrapper = styled.div`
   display: flex;
@@ -26,4 +27,19 @@ export const RightWrapper = styled.div`
   flex: 1;
   display: flex;
   color: white;
+`;
+
+export const SkeletonImage = styled.div`
+  width: 100px;
+  height: 100px;
+  background-color: ${SkeletonBackground};
+  border-radius: 5px 0px 0px 5px;a
+  ${SkeletonAnimation}
+`;
+
+export const SkeletonRightWrapper = styled.div`
+  flex: 1;
+  background-color: ${SkeletonBackground};
+  border-radius: 0px 5px 5px 0px;
+  ${SkeletonAnimation}
 `;

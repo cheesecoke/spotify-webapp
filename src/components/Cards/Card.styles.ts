@@ -1,5 +1,7 @@
-import { NightTextSecondary } from "styles/colors";
+/** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
+import { NightTextSecondary, SkeletonBackground } from "styles/colors";
+import { SkeletonAnimation } from "styles/animations";
 
 export const CardContainer = styled.div`
   display: flex;
@@ -9,6 +11,7 @@ export const CardContainer = styled.div`
   gap: 15px;
   width: 180px;
   cursor: pointer;
+  min-height: 250px;
 `;
 
 export const Image = styled.img`
@@ -18,7 +21,7 @@ export const Image = styled.img`
   border-radius: 5px;
 `;
 
-export const Description = styled.div``;
+export const Section = styled.div``;
 
 export const Title = styled.h3`
   overflow: hidden;
@@ -37,4 +40,25 @@ export const Text = styled.p`
   font-weight: 700;
   line-height: normal;
   color: ${NightTextSecondary};
+`;
+
+export const SkeletonImage = styled.div`
+  width: 180px;
+  height: 180px;
+  background-color: ${SkeletonBackground};
+  border-radius: 5px;
+  ${SkeletonAnimation}
+`;
+
+export const SkeletonTitle = styled.div`
+  width: 100%;
+  height: 20px;
+  background-color: ${SkeletonBackground};
+  border-radius: 5px;
+  ${SkeletonAnimation}
+`;
+
+export const SkeletonText = styled(SkeletonTitle)`
+  margin-top: 5px;
+  width: 75%;
 `;

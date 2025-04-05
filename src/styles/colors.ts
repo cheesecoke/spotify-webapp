@@ -7,3 +7,6 @@ export const NightTransparentSecondary = "rgba(255, 255, 255, 0.05)";
 
 export const NightTextPrimary = "rgba(255, 255, 255, 0.90)";
 export const NightTextSecondary = "rgba(255, 255, 255, 0.60)";
+
+export const SkeletonBackground = "#2a2a2a";
+export const SkeletonBackgroundLight = "#3a3a3a";

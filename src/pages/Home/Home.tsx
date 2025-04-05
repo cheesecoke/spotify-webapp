@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSpotifyPlayer } from "context/PlayerProvider";
 import { useSpotify } from "hooks/useSpotify";
 import { getRecentlyPlayed } from "api/spotify/recently-played";
+import mapToCardItems from "utils/mapToCardItems";
 import PageLayout from "components/Layouts/PageLayout";
 import Carousel from "components/Carousel";
 import PageHeading from "./PageHeading";
@@ -10,6 +11,8 @@ import TopElement from "./TopElement";
 const Home = () => {
   const { sdk, loading } = useSpotify();
   const { player, deviceId } = useSpotifyPlayer();
+
+  const [isLoadingData, setIsLoadingData] = useState(true);
   const [recentlyPlayed, setRecentlyPlayed] = useState<any>(null);
   const [topItems, setTopItems] = useState<any[]>([]);
   const [topMixes, setTopMixes] = useState<any[]>([]);
@@ -18,14 +21,7 @@ const Home = () => {
 
   const handlePlay = (uri?: string) => {
     if (!uri) return;
-    console.log("Playing", uri);
-    console.log("Device ID", deviceId);
-    console.log("Player", player);
     if (!player || !deviceId) return;
-
-    if (uri.startsWith("spotify:artist")) {
-      console.log("Can't play artist URI directly. Fetch top tracks instead.");
-    }
 
     player._options.getOAuthToken((token: string) => {
       fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
@@ -55,32 +51,33 @@ const Home = () => {
     if (!sdk || loading) return;
 
     const loadData = async () => {
-      // TODO: Move
-      function makeItems(items: any[]) {
-        return items.map((item) => ({
-          id: item.id,
-          title: item.name,
-          image: item.images[0]?.url,
-          description: item.description,
-          uri: item.uri,
-        }));
+      setIsLoadingData(true);
+
+      try {
+        // CAROUSEL 1
+        const res = await sdk.currentUser.topItems("tracks", "short_term", 6);
+        console.log("Top items:", res);
+        setTopItems(mapToCardItems(res.items));
+        const topArtist = res.items[0].artists[0];
+        const artistName = topArtist.name;
+        setTopArtistName(artistName);
+        const moreArtist = await sdk.search(artistName, ["artist"]);
+        console.log("More artist:", moreArtist);
+        setTopArtistSearch(mapToCardItems(moreArtist.artists.items));
+
+        // CAROUSEL 2
+        const playlistsRes = await sdk.currentUser.playlists.playlists(10);
+        setTopMixes(mapToCardItems(playlistsRes.items));
+
+        // CAROUSEL 3
+        const recent = await getRecentlyPlayed(sdk);
+        console.log("Recently played:", recent);
+        setRecentlyPlayed(mapToCardItems(recent));
+      } catch (error) {
+        console.error("Error loading data:", error);
+      } finally {
+        setIsLoadingData(false);
       }
-
-      // CAROUSEL 1
-      const res = await sdk.currentUser.topItems("tracks", "short_term", 1);
-      const topArtist = res.items[0].artists[0];
-      const artistName = topArtist.name;
-      setTopArtistName(artistName);
-      const moreArtist = await sdk.search(artistName, ["artist"]);
-      setTopArtistSearch(makeItems(moreArtist.artists.items));
-
-      // CAROUSEL 2
-      const playlistsRes = await sdk.currentUser.playlists.playlists(10);
-      setTopMixes(makeItems(playlistsRes.items));
-
-      // CAROUSEL 3
-      const recent = await getRecentlyPlayed(sdk);
-      setRecentlyPlayed(recent);
     };
 
     loadData();
@@ -89,19 +86,22 @@ const Home = () => {
   return (
     <PageLayout
       pageHeading={<PageHeading />}
-      topElement={<TopElement items={topItems} />}
+      topElement={<TopElement loading={isLoadingData} items={topItems} />}
     >
       <Carousel
+        loading={isLoadingData}
         onClick={handlePlay}
         heading={topArtistName ? `More like ${topArtistName}` : "Top Artist"}
         items={topArtistSearch}
       />
       <Carousel
+        loading={isLoadingData}
         onClick={handlePlay}
         heading="Your Top Mixes"
         items={topMixes}
       />
       <Carousel
+        loading={isLoadingData}
         onClick={handlePlay}
         heading="Recently Played"
         items={recentlyPlayed}

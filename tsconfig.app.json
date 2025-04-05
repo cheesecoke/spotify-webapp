@@ -30,7 +30,8 @@
       "pages/*": ["pages/*"],
       "api/*": ["api/*"],
       "styles/*": ["styles/*"],
-      "assets/*": ["assets/*"]
+      "assets/*": ["assets/*"],
+      "utils/*": ["utils/*"]
     }
   },
   "include": ["src"]

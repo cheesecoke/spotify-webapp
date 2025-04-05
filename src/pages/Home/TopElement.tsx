@@ -10,24 +10,29 @@ const Grid = styled.div`
 
 const RightContent = styled.div`
   display: flex;
-  justify-content: left;
+  justify-content: flex-start;
   flex-wrap: wrap;
   align-items: center;
   padding: 20px;
+  text-align: left;
 `;
 
-const TopElement = ({ items }: { items: any }) => {
+const TopElement = ({ items, loading }: { items: any; loading?: boolean }) => {
   return (
     <BaseLayout>
       <Grid>
-        {items?.map((item: any, index: number) => (
-          <HorizontalCard
-            key={index}
-            image={item.image}
-            alt={item.trackTitle}
-            content={<RightContent>{item.trackTitle}</RightContent>}
-          />
-        ))}
+        {loading || !items || items.length === 0
+          ? Array.from({ length: 5 }).map((_, index) => (
+              <HorizontalCard key={`skeleton-${index}`} loading />
+            ))
+          : items?.map((item: any, index: number) => (
+              <HorizontalCard
+                key={index}
+                image={item.image}
+                alt={item.imageAlt}
+                content={<RightContent>{item.title}</RightContent>}
+              />
+            ))}
       </Grid>
     </BaseLayout>
   );

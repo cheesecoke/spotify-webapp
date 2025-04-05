@@ -1,13 +1,23 @@
-import { CardContainer, Description, Title, Text, Image } from "./Card.styles";
+import {
+  CardContainer,
+  Section,
+  Title,
+  Text,
+  Image,
+  SkeletonImage,
+  SkeletonTitle,
+  SkeletonText,
+} from "./Card.styles";
 
 type CardProps = {
-  imageUrl: string;
-  imageAlt: string;
+  imageUrl?: string;
+  imageAlt?: string;
   title?: string;
   description?: string;
   style?: React.CSSProperties;
   onClick?: (uri?: string) => void;
   uri?: string;
+  loading?: boolean;
 };
 
 const Card = ({
@@ -15,10 +25,14 @@ const Card = ({
   imageAlt,
   title,
   description,
-  style,
   onClick,
   uri,
+  loading,
 }: CardProps) => {
+  const SetImage = loading ? SkeletonImage : Image;
+  const SetTitle = loading ? SkeletonTitle : Title;
+  const SetText = loading ? SkeletonText : Text;
+
   const handleClick = () => {
     console.log("Card clicked");
     console.log("URI:", uri);
@@ -28,12 +42,12 @@ const Card = ({
   };
 
   return (
-    <CardContainer style={style} onClick={handleClick}>
-      <Image src={imageUrl} alt={imageAlt} />
-      <Description>
-        <Title>{title}</Title>
-        <Text>{description}</Text>
-      </Description>
+    <CardContainer onClick={handleClick}>
+      <SetImage src={imageUrl} alt={imageAlt} />
+      <Section>
+        <SetTitle>{title}</SetTitle>
+        <SetText>{description}</SetText>
+      </Section>
     </CardContainer>
   );
 };
