@@ -3,13 +3,12 @@ import {
   NightTextSecondary,
   NightTransparentPrimary,
   NightTextPrimary,
+  SkeletonBackground,
 } from "styles/colors";
+import { AnimatedOpacity } from "styles/animations";
 
-export const Container = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 0 20px;
+export const HamburgerIconWrapper = styled.div`
+  cursor: pointer;
 `;
 
 export const Item = styled.div<{ isActive: boolean }>`
@@ -23,5 +22,50 @@ export const Item = styled.div<{ isActive: boolean }>`
 
   &:hover {
     color: ${NightTextSecondary};
+  }
+
+  @media (max-width: 780px) {
+    padding: 0px;
+  }
+`;
+
+export const MobileMenu = styled.div`
+  display: none;
+
+  @media (max-width: 780px) {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+`;
+
+export const DropdownContainer = styled.div<{ isOpen: boolean }>`
+  display: ${({ isOpen }) => (isOpen ? "flex" : "none")};
+  position: absolute;
+  top: 45px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px 20px 20px 20px;
+  background-color: ${SkeletonBackground};
+  border-radius: 5px;
+  z-index: 2;
+  ${AnimatedOpacity}
+`;
+
+export const DesktopMenu = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 20px;
+  padding: 0 20px;
+
+  @media (max-width: 780px) {
+    display: none;
   }
 `;

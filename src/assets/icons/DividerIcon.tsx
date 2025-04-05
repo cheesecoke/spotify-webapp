@@ -5,7 +5,7 @@ export function DividerIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="2"
+      width="6"
       height="100"
       viewBox="0 0 2 100"
       fill="none"

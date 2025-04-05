@@ -56,13 +56,11 @@ const Home = () => {
       try {
         // CAROUSEL 1
         const res = await sdk.currentUser.topItems("tracks", "short_term", 6);
-        console.log("Top items:", res);
         setTopItems(mapToCardItems(res.items));
         const topArtist = res.items[0].artists[0];
         const artistName = topArtist.name;
         setTopArtistName(artistName);
         const moreArtist = await sdk.search(artistName, ["artist"]);
-        console.log("More artist:", moreArtist);
         setTopArtistSearch(mapToCardItems(moreArtist.artists.items));
 
         // CAROUSEL 2
@@ -71,7 +69,6 @@ const Home = () => {
 
         // CAROUSEL 3
         const recent = await getRecentlyPlayed(sdk);
-        console.log("Recently played:", recent);
         setRecentlyPlayed(mapToCardItems(recent));
       } catch (error) {
         console.error("Error loading data:", error);
