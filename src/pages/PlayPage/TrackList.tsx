@@ -46,7 +46,7 @@ const TrackList = ({
             <LeftWrapper>
               <LeftContentWrapper>
                 <PlayButtonWrapper isVisible={isActive}>
-                  {isPlaying ? (
+                  {isActive && isPlaying ? (
                     <PauseButton>
                       <PauseIcon width="20" height="20" />
                     </PauseButton>

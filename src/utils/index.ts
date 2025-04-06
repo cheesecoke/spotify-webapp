@@ -1,23 +1,46 @@
-export function mapToCardItems(items: any[]) {
+// TODO: Is it better to break these out by page?
+// This might be doing too much.
+export function mapToCardItems(
+  items: any[],
+  config: { unwrap?: "episode" | "track" | "category" } = {},
+) {
   return items.map((item) => {
-    const isCategory = item.icons && item.href;
+    let itemType = item;
+
+    if (config.unwrap === "episode" && item.episode) {
+      itemType = item.episode;
+    } else if (config.unwrap === "track" && item.track) {
+      itemType = item.track;
+    } else if (config.unwrap === "category") {
+      itemType = {
+        ...item,
+        name: item.name,
+        icons: item.icons,
+        href: item.href,
+        type: "category",
+        image: item.icons?.[0]?.url || "",
+      };
+    }
+
     return {
-      id: item.id,
-      title: item.trackTitle || item.name || item.title,
+      id: itemType.id,
+      title: itemType.trackTitle || itemType.name || itemType.title,
       image:
-        item.image ||
-        item.images?.[0]?.url ||
-        item.album?.images?.[0]?.url ||
-        item.icons?.[0]?.url ||
+        itemType.image ||
+        itemType.images?.[0]?.url ||
+        itemType.album?.images?.[0]?.url ||
+        itemType.icons?.[0]?.url ||
         "",
-      imageAlt: item.trackTitle || item.name || item.title,
+      imageAlt: itemType.trackTitle || itemType.name || itemType.title,
       description:
-        item.artistName ||
-        item.artists?.[0]?.name ||
-        item.description ||
-        item.type ||
-        (isCategory ? "Category" : ""),
-      uri: item.uri || (isCategory ? item.href : undefined),
+        itemType.artistName ||
+        itemType.artists?.[0]?.name ||
+        itemType.description ||
+        itemType.type ||
+        "",
+      uri:
+        itemType.uri ||
+        (config.unwrap === "category" ? itemType.href : undefined),
     };
   });
 }

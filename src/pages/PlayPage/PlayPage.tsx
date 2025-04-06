@@ -10,10 +10,18 @@ import { mapTrackToCardItem } from "utils";
 
 const PlayPage = () => {
   const { id } = useParams();
-  const { player, deviceId, setCurrentlyPlayingUri } = useSpotifyPlayer();
+  const {
+    player,
+    deviceId,
+    setCurrentlyPlayingUri,
+    currentlyPlayingUri,
+    setIsPlaying,
+    isPlaying,
+  } = useSpotifyPlayer();
   const location = useLocation();
   const contentType = location.pathname.split("/")[1];
   const { sdk, loading } = useSpotify();
+  const { pausePlayback } = useSpotifyPlayer();
 
   const [items, setItems] = useState<any[]>([]);
   const [heading, setHeading] = useState("");
@@ -22,6 +30,7 @@ const PlayPage = () => {
   const [content, setContent] = useState("");
 
   //TODO: Add global play controls.
+  // - clean up page
   useEffect(() => {
     console.log("PlayPage:::contentType", contentType);
     if (!sdk || loading || !id) return;
@@ -48,13 +57,13 @@ const PlayPage = () => {
             // setContent(res.items[0].name);
           }
         } else if (contentType === "playlist") {
-          const res = await sdk.playlists.tracks(id);
-          setItems(mapTrackToCardItem(res.items));
-          setHeading("Playlist Tracks");
-          if (res.items.length > 0) {
-            setImage(res.items[0].album.images[0]?.url || "");
-            setAlt(res.items[0].name);
-            // setContent(res.items[0].name);
+          const res = await sdk.playlists.getPlaylist(id); // ← FIXED HERE
+          const tracks = res.tracks.items.map((item) => item.track); // ← unwrap
+          setItems(mapTrackToCardItem(tracks));
+          setHeading(res.name || "Playlist Tracks");
+          if (tracks.length > 0) {
+            setImage(res.images?.[0]?.url || "");
+            setAlt(res.name);
           }
         } else if (contentType === "track") {
           // If track, should we just play it?
@@ -62,6 +71,20 @@ const PlayPage = () => {
           setItems(mapTrackToCardItem([res]));
           setHeading(res.name || "Track");
           setImage(res.album?.images?.[0]?.url || "");
+          setAlt(res.name);
+        } else if (contentType === "episode") {
+          const res = await sdk.episodes.get(id);
+          console.log("res", res);
+          setItems(mapTrackToCardItem([res]));
+          setHeading(res.name || "Episode");
+          setImage(res.images?.[0]?.url || "");
+          setAlt(res.name);
+        } else if (contentType === "show") {
+          const res = await sdk.shows.get(id);
+          const episodes = res.episodes?.items || [];
+          setItems(mapTrackToCardItem(episodes));
+          setHeading(res.name || "Show");
+          setImage(res.images?.[0]?.url || "");
           setAlt(res.name);
         }
       } catch (error) {
@@ -85,19 +108,30 @@ const PlayPage = () => {
     );
   };
 
-  const handleTrackPlay = (uri: string) => {
-    if (!sdk || !deviceId || items.length === 0) {
-      console.warn("Player not ready or no items");
-      return;
-    }
-
-    sdk.player.startResumePlayback(deviceId, undefined, [uri]);
-  };
-
-  const handlePause = () => {
+  const handleTrackPlay = async (uri: string) => {
     if (!sdk || !deviceId) return;
 
-    sdk.player.pausePlayback(deviceId);
+    if (currentlyPlayingUri === uri && isPlaying) {
+      if (isPlaying) {
+        await sdk.player.pausePlayback(deviceId);
+        setIsPlaying(false);
+      } else {
+        await sdk.player.startResumePlayback(deviceId, undefined, [uri]);
+        setIsPlaying(true);
+      }
+    } else {
+      // Stop current track before switching
+      await pausePlayback(deviceId);
+      await sdk.player.startResumePlayback(deviceId, undefined, [uri]);
+      setCurrentlyPlayingUri(uri);
+      setIsPlaying(true);
+    }
+  };
+
+  const handlePause = async () => {
+    if (!sdk || !deviceId) return;
+    await pausePlayback(deviceId);
+    setIsPlaying(false);
   };
 
   const onShuffle = () => {

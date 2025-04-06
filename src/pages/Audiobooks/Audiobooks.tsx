@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useSpotify } from "hooks/useSpotify";
+import { useNavigate } from "react-router-dom";
 import PageLayout from "components/Layouts/PageLayout";
 import PageHeading from "./PageHeading";
 import Carousel from "components/Carousel";
+import { mapToCardItems } from "utils";
 
 interface AudiobooksState {
   newAudiobooks: Array<{
@@ -23,6 +25,7 @@ interface AudiobooksState {
 
 const Audiobooks = () => {
   const { sdk } = useSpotify();
+  const navigate = useNavigate();
   const [audiobooks, setAudiobooks] = useState<AudiobooksState>({
     newAudiobooks: [],
     buzzAudiobooks: [],
@@ -31,17 +34,6 @@ const Audiobooks = () => {
   useEffect(() => {
     const getAudiobooks = async () => {
       if (!sdk) return;
-
-      // TODO: Move
-      function makeItems(items: any[]) {
-        return items.map((item) => ({
-          id: item.id,
-          title: item.name,
-          image: item.images[0]?.url,
-          description: item.description,
-          uri: item.uri,
-        }));
-      }
 
       try {
         const resNewAudiobooks = await sdk.search("new", ["audiobook"], {
@@ -52,7 +44,7 @@ const Audiobooks = () => {
           (error as any).status = resNewAudiobooks.status;
           throw error;
         }
-        const newAudiobooks = makeItems(resNewAudiobooks.audiobooks.items);
+        const newAudiobooks = mapToCardItems(resNewAudiobooks.audiobooks.items);
 
         const resBuzz = await sdk.search("buzz", ["audiobook"], {
           limit: 20,
@@ -62,7 +54,7 @@ const Audiobooks = () => {
           (error as any).status = resBuzz.status;
           throw error;
         }
-        const buzzAudiobooks = makeItems(resBuzz.audiobooks.items);
+        const buzzAudiobooks = mapToCardItems(resBuzz.audiobooks.items);
 
         setAudiobooks({
           newAudiobooks,
@@ -77,17 +69,33 @@ const Audiobooks = () => {
     getAudiobooks();
   }, [sdk]);
 
+  const handlePlay = (uri?: string) => {
+    console.log("uri", uri);
+    if (!uri) return;
+
+    const [type, id] = uri.split(":").slice(1); // ['track', '3n3Ppam7vgaVa1iaRUc9Lp']
+    if (type && id) {
+      navigate(`/${type}/${id}`);
+    }
+  };
+
   return (
     <PageLayout overflow={true} pageHeading={<PageHeading />}>
       <Carousel
         heading="Great first audiobooks"
         items={audiobooks.newAudiobooks.slice(0, 10)}
+        onClick={handlePlay}
       />
       <Carousel
         heading="What's new"
         items={audiobooks.newAudiobooks.slice(10, 20)}
+        onClick={handlePlay}
       />
-      <Carousel heading="Buzzworthy" items={audiobooks.buzzAudiobooks} />
+      <Carousel
+        heading="Buzzworthy"
+        items={audiobooks.buzzAudiobooks}
+        onClick={handlePlay}
+      />
     </PageLayout>
   );
 };

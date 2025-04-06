@@ -37,6 +37,7 @@ interface PlayerContextValue {
   setCurrentlyPlayingUri: (uri: string | null) => void;
   isPlaying: boolean;
   setIsPlaying: (isPlaying: boolean) => void;
+  pausePlayback: (deviceId: string) => Promise<void>; // <- Add this
 }
 
 const PlayerContext = createContext<PlayerContextValue>({
@@ -46,6 +47,7 @@ const PlayerContext = createContext<PlayerContextValue>({
   setCurrentlyPlayingUri: () => {},
   isPlaying: false,
   setIsPlaying: () => {},
+  pausePlayback: async () => {},
 });
 
 export const useSpotifyPlayer = () => useContext(PlayerContext);
@@ -59,6 +61,23 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   );
   const [isPlaying, setIsPlaying] = useState(false);
   const tokenRef = useRef<string | null>(null);
+  const pausePlayback = async (deviceId: string) => {
+    if (!sdk || !deviceId) return;
+
+    const tokenRes = await sdk.getAccessToken();
+    const token = tokenRes?.access_token;
+    if (!token) throw new Error("No access token");
+
+    await fetch(
+      `https://api.spotify.com/v1/me/player/pause?device_id=${deviceId}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+  };
 
   useEffect(() => {
     if (!sdk) {
@@ -144,6 +163,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         setCurrentlyPlayingUri,
         isPlaying,
         setIsPlaying,
+        pausePlayback,
       }}
     >
       {children}

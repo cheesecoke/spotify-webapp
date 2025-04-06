@@ -18,8 +18,9 @@ const Browse = () => {
       if (!sdk) return;
       try {
         const res = await sdk.browse.getCategories({ limit: 20 });
-        console.log("res:", mapToCardItems(res.categories.items));
-        setCategories(mapToCardItems(res.categories.items));
+        setCategories(
+          mapToCardItems(res.categories.items, { unwrap: "category" }),
+        );
       } catch (err) {
         console.error("Browse error:", err);
       } finally {

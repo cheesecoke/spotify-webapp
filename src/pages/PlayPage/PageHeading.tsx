@@ -16,7 +16,12 @@ const PageHeading = ({
 }) => {
   return (
     <Wrapper>
-      <HorizontalCard image={image} alt={alt} content={content} />
+      <HorizontalCard
+        isHeading={true}
+        image={image}
+        alt={alt}
+        content={content}
+      />
     </Wrapper>
   );
 };
