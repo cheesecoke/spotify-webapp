@@ -10,3 +10,6 @@ export const NightTextSecondary = "rgba(255, 255, 255, 0.60)";
 
 export const SkeletonBackground = "#2a2a2a";
 export const SkeletonBackgroundLight = "#3a3a3a";
+
+//Brand
+export const SpotifyGreen = "#1ed760";

@@ -4,15 +4,20 @@ declare global {
     Spotify: typeof Spotify;
   }
 
-  namespace Spotify {
-    interface Player {
-      new (options: {
-        name: string;
-        getOAuthToken: (cb: (token: string) => void) => void;
-        volume?: number;
-      }): Spotify.Player;
-    }
+  interface SpotifyPlayerOptions {
+    name: string;
+    getOAuthToken: (cb: (token: string) => void) => void;
+    volume?: number;
   }
+
+  interface SpotifyPlayer {
+    addListener(event: string, callback: (data: any) => void): void;
+    connect(): Promise<boolean>;
+  }
+
+  type Spotify = {
+    Player: SpotifyPlayer;
+  };
 }
 
 import {
@@ -26,13 +31,21 @@ import {
 import { useSpotify } from "hooks/useSpotify";
 
 interface PlayerContextValue {
-  player: Spotify.Player | null;
+  player: Spotify["Player"] | null;
   deviceId: string | null;
+  currentlyPlayingUri: string | null;
+  setCurrentlyPlayingUri: (uri: string | null) => void;
+  isPlaying: boolean;
+  setIsPlaying: (isPlaying: boolean) => void;
 }
 
 const PlayerContext = createContext<PlayerContextValue>({
   player: null,
   deviceId: null,
+  currentlyPlayingUri: null,
+  setCurrentlyPlayingUri: () => {},
+  isPlaying: false,
+  setIsPlaying: () => {},
 });
 
 export const useSpotifyPlayer = () => useContext(PlayerContext);
@@ -41,6 +54,10 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const { sdk } = useSpotify();
   const [player, setPlayer] = useState<Spotify.Player | null>(null);
   const [deviceId, setDeviceId] = useState<string | null>(null);
+  const [currentlyPlayingUri, setCurrentlyPlayingUri] = useState<string | null>(
+    null,
+  );
+  const [isPlaying, setIsPlaying] = useState(false);
   const tokenRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -76,7 +93,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       document.body.appendChild(script);
 
       window.onSpotifyWebPlaybackSDKReady = () => {
-        const playerInstance = new Spotify.Player({
+        const playerInstance = new window.Spotify.Player({
           name: "Web Playback SDK",
           getOAuthToken: async (cb) => {
             try {
@@ -96,8 +113,13 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         });
 
         playerInstance.addListener("ready", ({ device_id }) => {
-          console.log("Spotify Player Ready", device_id);
-          setDeviceId(device_id);
+          setDeviceId(String(device_id));
+        });
+
+        playerInstance.addListener("player_state_changed", (state) => {
+          if (!state) return;
+          setIsPlaying(!state.paused);
+          setCurrentlyPlayingUri(state.track_window.current_track?.uri ?? null);
         });
 
         playerInstance.connect().then((success) => {
@@ -114,7 +136,16 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, [sdk]);
 
   return (
-    <PlayerContext.Provider value={{ player, deviceId }}>
+    <PlayerContext.Provider
+      value={{
+        player,
+        deviceId,
+        currentlyPlayingUri,
+        setCurrentlyPlayingUri,
+        isPlaying,
+        setIsPlaying,
+      }}
+    >
       {children}
     </PlayerContext.Provider>
   );

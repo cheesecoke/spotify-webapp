@@ -1,5 +1,9 @@
 import styled from "@emotion/styled";
-import { NightTextSecondary, NightTextPrimary } from "styles/colors";
+import {
+  NightTextSecondary,
+  NightTextPrimary,
+  SpotifyGreen,
+} from "styles/colors";
 import { AnimatedOpacity } from "styles/animations";
 
 export const LeftWrapper = styled.div`
@@ -25,23 +29,27 @@ export const RightWrapper = styled.div`
 
 export const PlayButton = styled.button`
   display: flex;
-  height: 30px;
-  padding: 7px 4px 7px 7px;
+  height: 34px;
+  padding: 10px 7px 10px 8px;
   justify-content: flex-end;
   align-items: center;
   border-radius: 305px;
-  background: #1ed760;
+  background: ${SpotifyGreen};
   backdrop-filter: blur(30px);
 `;
 
-export const PlayButtonWrapper = styled.div`
-  display: none;
+export const PauseButton = styled(PlayButton)`
+  padding: 10px 7px 10px 7px;
+`;
+
+export const PlayButtonWrapper = styled.div<{ isVisible: boolean }>`
+  display: ${({ isVisible }) => (isVisible ? "flex" : "none")};
   position: absolute;
   left: 0px;
 `;
 
-export const IndexNumber = styled.span`
-  display: block;
+export const IndexNumber = styled.span<{ isHidden: boolean }>`
+  display: ${({ isHidden }) => (isHidden ? "none" : "block")};
   position: absolute;
   left: 10px;
   color: ${NightTextSecondary};

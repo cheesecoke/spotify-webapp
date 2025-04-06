@@ -5,12 +5,12 @@ import { useSpotify } from "hooks/useSpotify";
 import PageLayout from "components/Layouts/PageLayout";
 import PageHeading from "./PageHeading";
 import TopElement from "./TopElement";
-import { mapTrackToCardItem } from "utils";
 import TrackList from "./TrackList";
+import { mapTrackToCardItem } from "utils";
 
 const PlayPage = () => {
   const { id } = useParams();
-  const { player, deviceId } = useSpotifyPlayer();
+  const { player, deviceId, setCurrentlyPlayingUri } = useSpotifyPlayer();
   const location = useLocation();
   const contentType = location.pathname.split("/")[1];
   const { sdk, loading } = useSpotify();
@@ -21,6 +21,7 @@ const PlayPage = () => {
   const [alt, setAlt] = useState("");
   const [content, setContent] = useState("");
 
+  //TODO: Add global play controls.
   useEffect(() => {
     console.log("PlayPage:::contentType", contentType);
     if (!sdk || loading || !id) return;
@@ -56,7 +57,7 @@ const PlayPage = () => {
             // setContent(res.items[0].name);
           }
         } else if (contentType === "track") {
-          // If track, should we just playit?
+          // If track, should we just play it?
           const res = await sdk.tracks.get(id);
           setItems(mapTrackToCardItem([res]));
           setHeading(res.name || "Track");
@@ -71,7 +72,42 @@ const PlayPage = () => {
     fetchData();
   }, [sdk, loading, id, contentType]);
 
-  console.log("PlayPage:::items", { items });
+  const handleTopPlay = () => {
+    if (!sdk || !deviceId || items.length === 0) {
+      console.warn("Player not ready or no items");
+      return;
+    }
+
+    sdk.player.startResumePlayback(
+      deviceId,
+      undefined,
+      items.map((item) => item.uri),
+    );
+  };
+
+  const handleTrackPlay = (uri: string) => {
+    if (!sdk || !deviceId || items.length === 0) {
+      console.warn("Player not ready or no items");
+      return;
+    }
+
+    sdk.player.startResumePlayback(deviceId, undefined, [uri]);
+  };
+
+  const handlePause = () => {
+    if (!sdk || !deviceId) return;
+
+    sdk.player.pausePlayback(deviceId);
+  };
+
+  const onShuffle = () => {
+    console.log("onShuffle");
+  };
+
+  const onMore = () => {
+    console.log("onMore");
+  };
+
   return (
     <PageLayout
       overflow={false}
@@ -80,9 +116,16 @@ const PlayPage = () => {
           <PageHeading image={image} alt={alt} content={content} />
         ) : null
       }
-      topElement={<TopElement />}
+      topElement={
+        <TopElement
+          onPlay={handleTopPlay}
+          onPause={handlePause}
+          onShuffle={onShuffle}
+          onMore={onMore}
+        />
+      }
     >
-      <TrackList items={items} />
+      <TrackList items={items} onPlay={handleTrackPlay} onPause={handlePause} />
     </PageLayout>
   );
 };

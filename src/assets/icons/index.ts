@@ -5,3 +5,7 @@ export { ChevronLeftIcon } from "./ChevronLeftIcon";
 export { ChevronRightIcon } from "./ChevronRightIcon";
 export { DividerIcon } from "./DividerIcon";
 export { HamburgerIcon } from "./Hamburger";
+export { MoreIcon } from "./MoreIcon";
+export { PlayIcon } from "./PlayIcon";
+export { PauseIcon } from "./PauseIcon";
+export { ShuffleIcon } from "./ShuffleIcon";
