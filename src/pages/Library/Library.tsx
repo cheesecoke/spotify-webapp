@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
+import { useNavigate } from "react-router-dom";
 import { useSpotify } from "hooks/useSpotify";
 import PageLayout from "components/Layouts/PageLayout";
 import PageHeading from "./PageHeading";
@@ -39,6 +40,8 @@ const ImageWrapper = styled.div`
 
 const Library = () => {
   const { sdk } = useSpotify();
+  const navigate = useNavigate();
+  const [isLoadingData, setIsLoadingData] = useState(true);
   const [totalTracks, setTotalTracks] = useState<any[]>([]);
   const [playlists, setPlaylists] = useState<
     {
@@ -48,21 +51,22 @@ const Library = () => {
       image?: string;
       href?: string;
       description?: string;
+      uri?: string;
     }[]
   >([]);
 
   useEffect(() => {
     const getPlaylists = async () => {
+      setIsLoadingData(true);
       if (!sdk) return;
       try {
         const res = await sdk.currentUser.playlists.playlists();
         const items = res.items.map((playlist: any) => ({
           id: playlist.id,
-          owner: playlist.owner?.display_name,
           name: playlist.name,
-          image: playlist.images?.[0]?.url,
-          href: playlist.external_urls?.spotify,
-          description: playlist.description,
+          image: playlist.images?.[0]?.url || "",
+          description: playlist.description || playlist.owner?.display_name,
+          uri: playlist.uri,
         }));
 
         const resSavedTracks = await sdk.currentUser.tracks.savedTracks();
@@ -72,11 +76,23 @@ const Library = () => {
         setTotalTracks(totalTracks);
       } catch (err) {
         console.error("Library error:", err);
+      } finally {
+        setIsLoadingData(false);
       }
     };
 
     getPlaylists();
   }, [sdk]);
+
+  const handlePlay = (uri?: string) => {
+    console.log("uri", uri);
+    if (!uri) return;
+
+    const [type, id] = uri.split(":").slice(1); // ['track', '3n3Ppam7vgaVa1iaRUc9Lp']
+    if (type && id) {
+      navigate(`/${type}/${id}`);
+    }
+  };
 
   return (
     <PageLayout overflow={false} pageHeading={<PageHeading />}>
@@ -95,15 +111,21 @@ const Library = () => {
             <p>{totalTracks} liked songs</p>
           </LikedDetails>
         </LikedSongsCard>
-        {playlists.map((item) => (
-          <Card
-            key={item.id}
-            imageUrl={item.image || ""}
-            imageAlt={item.name}
-            title={item.name}
-            description={item.description || item.owner}
-          />
-        ))}
+        {isLoadingData || !playlists || playlists.length === 0
+          ? Array.from({ length: 20 }).map((_, index) => (
+              <Card key={`skeleton-${index}`} loading />
+            ))
+          : playlists.map((item) => (
+              <Card
+                key={item.id}
+                imageUrl={item.image}
+                imageAlt={item.name}
+                title={item.name}
+                description={item.description}
+                uri={item.uri}
+                onClick={handlePlay}
+              />
+            ))}
       </Grid>
     </PageLayout>
   );
