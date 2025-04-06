@@ -17,7 +17,15 @@ const RightContent = styled.div`
   text-align: left;
 `;
 
-const TopElement = ({ items, loading }: { items: any; loading?: boolean }) => {
+const TopElement = ({
+  items,
+  loading,
+  onClick,
+}: {
+  items: any;
+  loading?: boolean;
+  onClick?: () => void;
+}) => {
   return (
     <BaseLayout>
       <Grid>
@@ -31,6 +39,8 @@ const TopElement = ({ items, loading }: { items: any; loading?: boolean }) => {
                 image={item.image}
                 alt={item.imageAlt}
                 content={<RightContent>{item.title}</RightContent>}
+                uri={item.uri}
+                onClick={onClick}
               />
             ))}
       </Grid>

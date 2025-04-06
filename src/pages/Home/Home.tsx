@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useSpotifyPlayer } from "context/PlayerProvider";
 import { useSpotify } from "hooks/useSpotify";
 import { getRecentlyPlayed } from "api/spotify/recently-played";
 import mapToCardItems from "utils/mapToCardItems";
@@ -7,10 +6,11 @@ import PageLayout from "components/Layouts/PageLayout";
 import Carousel from "components/Carousel";
 import PageHeading from "./PageHeading";
 import TopElement from "./TopElement";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const { sdk, loading } = useSpotify();
-  const { player, deviceId } = useSpotifyPlayer();
+  const navigate = useNavigate();
 
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [recentlyPlayed, setRecentlyPlayed] = useState<any>(null);
@@ -20,31 +20,13 @@ const Home = () => {
   const [topArtistSearch, setTopArtistSearch] = useState<any[]>([]);
 
   const handlePlay = (uri?: string) => {
+    console.log("uri", uri);
     if (!uri) return;
-    if (!player || !deviceId) return;
 
-    player._options.getOAuthToken((token: string) => {
-      fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
-        method: "PUT",
-        body: JSON.stringify({
-          uris: ["spotify:track:3n3Ppam7vgaVa1iaRUc9Lp"],
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Make sure to pass token for callback
-        },
-      })
-        .then((res) => {
-          if (!res.ok) {
-            console.error("Playback failed:", res.status, res.statusText);
-          } else {
-            console.log("Playback started");
-          }
-        })
-        .catch((err) => {
-          console.error("Fetch error:", err);
-        });
-    });
+    const [type, id] = uri.split(":").slice(1); // ['track', '3n3Ppam7vgaVa1iaRUc9Lp']
+    if (type && id) {
+      navigate(`/${type}/${id}`);
+    }
   };
 
   useEffect(() => {
@@ -83,7 +65,13 @@ const Home = () => {
   return (
     <PageLayout
       pageHeading={<PageHeading />}
-      topElement={<TopElement loading={isLoadingData} items={topItems} />}
+      topElement={
+        <TopElement
+          onClick={handlePlay}
+          loading={isLoadingData}
+          items={topItems}
+        />
+      }
     >
       <Carousel
         loading={isLoadingData}

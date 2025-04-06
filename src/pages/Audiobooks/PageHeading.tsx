@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import PageNavigation from "components/PageNavigation";
+import PageNavigation from "pages/Library/LibraryNavigation";
 
 const Wrapper = styled.h1`
   margin: 0px 30px;

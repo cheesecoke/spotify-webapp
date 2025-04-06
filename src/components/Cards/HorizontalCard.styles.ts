@@ -13,6 +13,7 @@ export const ItemWrapper = styled.div`
   border-radius: 5px;
   background-color: ${NightTransparentSecondary};
   overflow: hidden;
+  cursor: pointer;
 `;
 
 export const Image = styled.img`

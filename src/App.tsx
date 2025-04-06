@@ -10,6 +10,7 @@ import Podcasts from "./pages/Podcasts/Podcasts";
 import Audiobooks from "./pages/Audiobooks/Audiobooks";
 import Artists from "./pages/Artists/Artists";
 import Albums from "./pages/Albums/Albums";
+import PlayPage from "./pages/PlayPage";
 
 function App() {
   return (
@@ -27,6 +28,14 @@ function App() {
             <Route path="audiobooks" element={<Audiobooks />} />
             <Route path="artists" element={<Artists />} />
             <Route path="albums" element={<Albums />} />
+            <Route path="play" element={<PlayPage />} />
+
+            <Route path="artist/:id" element={<PlayPage />} />
+            <Route path="album/:id" element={<PlayPage />} />
+            <Route path="playlist/:id" element={<PlayPage />} />
+            <Route path="track/:id" element={<PlayPage />} />
+            <Route path="podcast/:id" element={<PlayPage />} />
+            <Route path="track/:id" element={<PlayPage />} />
           </Route>
         </Routes>
       </PlayerProvider>
