@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSpotify } from "hooks/useSpotify";
 import { getRecentlyPlayed } from "api/spotify/recently-played";
-import mapToCardItems from "utils/mapToCardItems";
+import { mapToCardItems } from "utils";
 import PageLayout from "components/Layouts/PageLayout";
 import Carousel from "components/Carousel";
 import PageHeading from "./PageHeading";
