@@ -11,6 +11,7 @@ import Audiobooks from "./pages/Audiobooks/Audiobooks";
 import Artists from "./pages/Artists/Artists";
 import Albums from "./pages/Albums/Albums";
 import PlayPage from "./pages/PlayPage";
+import Category from "./pages/Category/Category";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
             <Route path="episode/:id" element={<PlayPage />} />
             <Route path="track/:id" element={<PlayPage />} />
             <Route path="show/:id" element={<PlayPage />} />
+            <Route path="category/:id" element={<Category />} />
           </Route>
         </Routes>
       </PlayerProvider>

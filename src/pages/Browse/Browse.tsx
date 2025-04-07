@@ -5,12 +5,14 @@ import PageHeading from "./PageHeading";
 import { Grid } from "./Browse.styles";
 import Card from "components/Cards/Card";
 import { mapToCardItems } from "utils";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 //TODO: Make Category Page
 const Browse = () => {
   const { sdk } = useSpotify();
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [categories, setCategories] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getBrowseAllData = async () => {
@@ -41,11 +43,16 @@ const Browse = () => {
           : categories.map((item) => (
               <Card
                 key={item.id}
-                imageUrl={item.image}
+                imageUrl={item.image ?? null}
                 imageAlt={item.imageAlt}
                 title={item.title}
-                description={item.description}
                 uri={item.uri}
+                onClick={() => {
+                  const cleanId = item.id?.split("/").pop()?.split("?")[0];
+                  navigate(`/category/${cleanId}`, {
+                    state: { title: item.title, id: cleanId },
+                  });
+                }}
               />
             ))}
       </Grid>
