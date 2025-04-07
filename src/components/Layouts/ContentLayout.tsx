@@ -2,13 +2,16 @@ import React from "react";
 import styled from "@emotion/styled";
 
 export const OverFlowLayout = styled.main`
-  padding: 20px 0px 40px 30px;
+  padding: 20px 0px 0px 30px;
   overflow-x: hidden;
 `;
 
 export const BaseLayout = styled.main`
-  height: 100vh;
-  padding: 20px 30px 100px 30px;
+  padding: 20px 30px 0px 30px;
+`;
+
+const Footer = styled.footer`
+  padding: 20px 30px;
 `;
 
 export const ContentLayout = ({
@@ -29,6 +32,7 @@ export const ContentLayout = ({
       {pageHeading}
       {topElement}
       <Wrapper>{children}</Wrapper>
+      <Footer />
     </>
   );
 };

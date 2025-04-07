@@ -1,17 +1,23 @@
 import { useParams, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSpotifyPlayer } from "context/PlayerProvider";
 import { useSpotify } from "hooks/useSpotify";
 import PageLayout from "components/Layouts/PageLayout";
 import PageHeading from "./PageHeading";
 import TopElement from "./TopElement";
 import TrackList from "./TrackList";
-import { mapTrackToCardItem, formatDuration, formatTime } from "utils";
+import {
+  handleArtist,
+  handleAlbum,
+  handlePlaylist,
+  handleTrack,
+  handleEpisode,
+  handleShow,
+} from "helpers";
 
 const PlayPage = () => {
   const { id } = useParams();
   const {
-    player,
     deviceId,
     setCurrentlyPlayingUri,
     currentlyPlayingUri,
@@ -19,7 +25,9 @@ const PlayPage = () => {
     isPlaying,
   } = useSpotifyPlayer();
   const location = useLocation();
-  const contentType = location.pathname.split("/")[1];
+  const contentType = location.pathname.split(
+    "/",
+  )[1] as keyof typeof fetchHandlers;
   const { sdk, loading } = useSpotify();
   const { pausePlayback } = useSpotifyPlayer();
 
@@ -29,123 +37,31 @@ const PlayPage = () => {
   const [alt, setAlt] = useState("");
   const [content, setContent] = useState({});
 
-  //TODO: Add global play controls.
-  // - clean up page
+  const fetchHandlers = useMemo(
+    () => ({
+      artist: handleArtist,
+      album: handleAlbum,
+      playlist: handlePlaylist,
+      track: handleTrack,
+      episode: handleEpisode,
+      show: handleShow,
+    }),
+    [],
+  );
+
   useEffect(() => {
-    console.log("PlayPage:::contentType", contentType);
     if (!sdk || loading || !id) return;
+    const handler = fetchHandlers[contentType];
+    if (!handler) return;
 
-    const fetchData = async () => {
-      try {
-        if (contentType === "artist") {
-          const res = await sdk.artists.topTracks(id);
-          console.log("res", res);
-          setItems(mapTrackToCardItem(res.tracks));
-          if (res.tracks.length > 0) {
-            const firstTrack = res.tracks[0];
-            setHeading(firstTrack.artists[0]?.name || "Top Tracks");
-            setImage(firstTrack.album?.images?.[1]?.url || "");
-            setAlt(firstTrack.name);
-            setContent({
-              type: "Artist",
-              title: firstTrack.artists[0]?.name,
-              artists: firstTrack.artists
-                ?.slice(0, 3)
-                .map((a: any) => a.name)
-                .join(", "),
-              owner: null,
-              likes: null,
-              total: res.tracks.length,
-              duration: formatDuration(res.tracks),
-            });
-          }
-        } else if (contentType === "album") {
-          const res = await sdk.albums.tracks(id);
-          setItems(mapTrackToCardItem(res.items));
-          setHeading("Album Tracks");
-          if (res.items.length > 0) {
-            setImage(res.items[0].album.images[0]?.url || "");
-            setAlt(res.items[0].name);
-            // setContent(res.items[0].name);
-          }
-        } else if (contentType === "playlist") {
-          const res = await sdk.playlists.getPlaylist(id);
-          const tracks = res.tracks.items.map((item) => item.track);
-          setItems(mapTrackToCardItem(tracks));
-          setHeading(res.name || "Playlist Tracks");
-          if (tracks.length > 0) {
-            setImage(res.images?.[0]?.url || "");
-            setAlt(res.name);
-          }
-          setContent({
-            type: "Playlist",
-            title: res.name,
-            artists: res.tracks.items[0]?.track?.artists
-              ?.slice(0, 3)
-              .map((a: any) => a.name)
-              .join(", "),
-            owner: res.owner?.display_name,
-            likes: res.followers?.total,
-            total: res.tracks.total,
-            duration: formatDuration(res.tracks.items),
-          });
-        } else if (contentType === "track") {
-          const res = await sdk.tracks.get(id);
-          console.log("res", res);
-          setItems(mapTrackToCardItem([res]));
-          setHeading(res.name || "Track");
-          setImage(res.album?.images?.[0]?.url || "");
-          setAlt(res.name);
-          setContent({
-            type: "Track",
-            title: res.name,
-            artists: res.artists?.map((a: any) => a.name).join(", "),
-            owner: res.album?.label,
-            likes: null,
-            total: 1,
-            duration: formatTime(res.duration_ms),
-          });
-        } else if (contentType === "episode") {
-          const res = await sdk.episodes.get(id);
-          console.log("res", res);
-          setItems(mapTrackToCardItem([res]));
-          setHeading(res.name || "Episode");
-          setImage(res.images?.[0]?.url || "");
-          setAlt(res.name);
-          setContent({
-            type: "Episode",
-            title: res.name,
-            artists: res.artists?.map((a: any) => a.name).join(", "),
-            owner: res.album?.label,
-            likes: null,
-            total: 1,
-            duration: formatTime(res.duration_ms),
-          });
-        } else if (contentType === "show") {
-          const res = await sdk.shows.get(id);
-          console.log("res", res);
-          const episodes = res.episodes?.items || [];
-          setItems(mapTrackToCardItem(episodes));
-          setHeading(res.name || "Show");
-          setImage(res.images?.[0]?.url || "");
-          setAlt(res.name);
-          setContent({
-            type: "Show",
-            title: res.name,
-            artists: res.artists?.map((a: any) => a.name).join(", "),
-            owner: res.album?.label,
-            likes: null,
-            total: 1,
-            duration: formatDuration(res.episodes?.items),
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching content:", error);
-      }
-    };
-
-    fetchData();
-  }, [sdk, loading, id, contentType]);
+    handler(sdk, id, ({ items, heading, image, alt, content }: any) => {
+      setItems(items);
+      setHeading(heading);
+      setImage(image);
+      setAlt(alt);
+      setContent(content);
+    });
+  }, [sdk, loading, id, contentType, fetchHandlers]);
 
   const handleTopPlay = () => {
     if (!sdk || !deviceId || items.length === 0) {
@@ -185,10 +101,12 @@ const PlayPage = () => {
     setIsPlaying(false);
   };
 
+  //TODO:
   const onShuffle = () => {
     console.log("onShuffle");
   };
 
+  //TODO:
   const onMore = () => {
     console.log("onMore");
   };

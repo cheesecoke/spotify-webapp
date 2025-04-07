@@ -40,6 +40,7 @@ export function mapToCardItems(
         "",
       uri:
         itemType.uri ||
+        itemType.trackUri ||
         (config.unwrap === "category" ? itemType.href : undefined),
     };
   });

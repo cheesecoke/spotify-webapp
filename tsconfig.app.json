@@ -31,7 +31,8 @@
       "api/*": ["api/*"],
       "styles/*": ["styles/*"],
       "assets/*": ["assets/*"],
-      "utils/*": ["utils/*"]
+      "utils/*": ["utils/*"],
+      "helpers/*": ["helpers/*"]
     }
   },
   "include": ["src"]
