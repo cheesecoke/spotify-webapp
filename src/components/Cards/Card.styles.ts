@@ -9,14 +9,14 @@ export const CardContainer = styled.div`
   align-items: left;
   justify-content: center;
   gap: 15px;
-  width: 180px;
+  width: 160px;
   cursor: pointer;
-  min-height: 250px;
+  min-height: 229px;
 `;
 
 export const Image = styled.img`
-  width: 180px;
-  height: 180px;
+  width: 160px;
+  height: 160px;
   object-fit: cover;
   border-radius: 5px;
 `;
@@ -43,8 +43,8 @@ export const Text = styled.p`
 `;
 
 export const SkeletonImage = styled.div`
-  width: 180px;
-  height: 180px;
+  width: 160px;
+  height: 160px;
   background-color: ${SkeletonBackground};
   border-radius: 5px;
   ${SkeletonAnimation}

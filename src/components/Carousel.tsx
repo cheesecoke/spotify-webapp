@@ -16,7 +16,7 @@ export const Heading = styled.div`
 
 export const List = styled.div`
   display: flex;
-  min-height: 250px;
+  min-height: 229px;
   overflow-x: auto;
   white-space: nowrap;
   gap: 20px;

@@ -6,12 +6,25 @@ import PageLayout from "components/Layouts/PageLayout";
 import PageHeading from "./PageHeading";
 import { Card } from "components/Cards";
 import { PlaylistArtists } from "assets/PlaylistArtists";
+import { BlueGradient } from "styles/colors";
 
 export const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   padding-bottom: 40px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
+  }
 `;
 
 const LikedSongsCard = styled.a`
@@ -21,7 +34,7 @@ const LikedSongsCard = styled.a`
   grid-column: span 2;
   grid-row: span 1;
   border-radius: 5px;
-  background: linear-gradient(118deg, #3d2aeb 14.12%, #898adf 97.08%);
+  background: ${BlueGradient};
 `;
 
 const LikedDetails = styled.div`
