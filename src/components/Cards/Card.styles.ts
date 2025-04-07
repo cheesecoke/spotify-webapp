@@ -1,6 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import styled from "@emotion/styled";
-import { NightTextSecondary, SkeletonBackground } from "styles/colors";
+import {
+  NightTextPrimary,
+  NightTextSecondary,
+  SkeletonBackground,
+} from "styles/colors";
 import { SkeletonAnimation } from "styles/animations";
 
 export const CardContainer = styled.div`
@@ -27,6 +31,7 @@ export const Title = styled.h3`
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: ${NightTextPrimary};
 `;
 
 export const Text = styled.p`
