@@ -15,5 +15,7 @@ export const SkeletonBackgroundLight = "#3a3a3a";
 export const SpotifyGreen = "#1ed760";
 
 //Gradient
-export const BlueGradient =
+export const BluePurpleGradient =
   "linear-gradient(118deg, #3d2aeb 14.12%, #898adf 97.08%)";
+export const VerticalGradient =
+  "linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.40) 100%), #316DA6";

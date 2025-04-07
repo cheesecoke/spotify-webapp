@@ -7,6 +7,7 @@ import {
 } from "./HorizontalCard.styles";
 
 const HorizontalCard = ({
+  isHeading = false,
   image,
   alt,
   content,
@@ -14,6 +15,7 @@ const HorizontalCard = ({
   uri,
   onClick,
 }: {
+  isHeading?: boolean;
   image?: string;
   alt?: string;
   content?: any;
@@ -25,17 +27,15 @@ const HorizontalCard = ({
   const SetWrapper = loading ? SkeletonRightWrapper : RightWrapper;
 
   const handleClick = () => {
-    console.log("Horizontal clicked");
-    console.log("URI:", uri);
     if (onClick && uri) {
       onClick(uri);
     }
   };
 
   return (
-    <ItemWrapper onClick={handleClick}>
-      <SetImage src={image} alt={alt} />
-      <SetWrapper>{content}</SetWrapper>
+    <ItemWrapper onClick={handleClick} isHeading={isHeading}>
+      <SetImage {...{ src: image, alt, isHeading }} />
+      <SetWrapper {...{ isHeading }}>{content}</SetWrapper>
     </ItemWrapper>
   );
 };

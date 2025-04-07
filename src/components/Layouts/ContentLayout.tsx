@@ -7,7 +7,8 @@ export const OverFlowLayout = styled.main`
 `;
 
 export const BaseLayout = styled.main`
-  padding: 20px 30px 40px 30px;
+  height: 100vh;
+  padding: 20px 30px 100px 30px;
 `;
 
 export const ContentLayout = ({

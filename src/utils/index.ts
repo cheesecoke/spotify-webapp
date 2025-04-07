@@ -63,3 +63,15 @@ export function formatTime(ms: number) {
     ? minutes + 1 + ":00"
     : minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
 }
+
+export function formatDuration(items: any[]) {
+  const totalMs = items.reduce((acc, item) => {
+    const ms = item.track?.duration_ms || item.duration_ms || 0;
+    return acc + ms;
+  }, 0);
+
+  const hours = Math.floor(totalMs / 3600000);
+  const minutes = Math.floor((totalMs % 3600000) / 60000);
+
+  return `${hours ? `${hours} hr ` : ""}${minutes} min`;
+}

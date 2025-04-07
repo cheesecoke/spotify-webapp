@@ -6,7 +6,7 @@ import PageLayout from "components/Layouts/PageLayout";
 import PageHeading from "./PageHeading";
 import TopElement from "./TopElement";
 import TrackList from "./TrackList";
-import { mapTrackToCardItem } from "utils";
+import { mapTrackToCardItem, formatDuration, formatTime } from "utils";
 
 const PlayPage = () => {
   const { id } = useParams();
@@ -27,7 +27,7 @@ const PlayPage = () => {
   const [heading, setHeading] = useState("");
   const [image, setImage] = useState("");
   const [alt, setAlt] = useState("");
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState({});
 
   //TODO: Add global play controls.
   // - clean up page
@@ -41,11 +41,23 @@ const PlayPage = () => {
           const res = await sdk.artists.topTracks(id);
           console.log("res", res);
           setItems(mapTrackToCardItem(res.tracks));
-          setHeading(res.tracks[0]?.artists[0]?.name || "Top Tracks");
           if (res.tracks.length > 0) {
-            setImage(res.tracks[0].images[0]?.url || "");
-            setAlt(res.tracks[0].name);
-            // setContent(res.tracks[0].name);
+            const firstTrack = res.tracks[0];
+            setHeading(firstTrack.artists[0]?.name || "Top Tracks");
+            setImage(firstTrack.album?.images?.[1]?.url || "");
+            setAlt(firstTrack.name);
+            setContent({
+              type: "Artist",
+              title: firstTrack.artists[0]?.name,
+              artists: firstTrack.artists
+                ?.slice(0, 3)
+                .map((a: any) => a.name)
+                .join(", "),
+              owner: null,
+              likes: null,
+              total: res.tracks.length,
+              duration: formatDuration(res.tracks),
+            });
           }
         } else if (contentType === "album") {
           const res = await sdk.albums.tracks(id);
@@ -57,21 +69,42 @@ const PlayPage = () => {
             // setContent(res.items[0].name);
           }
         } else if (contentType === "playlist") {
-          const res = await sdk.playlists.getPlaylist(id); // ← FIXED HERE
-          const tracks = res.tracks.items.map((item) => item.track); // ← unwrap
+          const res = await sdk.playlists.getPlaylist(id);
+          const tracks = res.tracks.items.map((item) => item.track);
           setItems(mapTrackToCardItem(tracks));
           setHeading(res.name || "Playlist Tracks");
           if (tracks.length > 0) {
             setImage(res.images?.[0]?.url || "");
             setAlt(res.name);
           }
+          setContent({
+            type: "Playlist",
+            title: res.name,
+            artists: res.tracks.items[0]?.track?.artists
+              ?.slice(0, 3)
+              .map((a: any) => a.name)
+              .join(", "),
+            owner: res.owner?.display_name,
+            likes: res.followers?.total,
+            total: res.tracks.total,
+            duration: formatDuration(res.tracks.items),
+          });
         } else if (contentType === "track") {
-          // If track, should we just play it?
           const res = await sdk.tracks.get(id);
+          console.log("res", res);
           setItems(mapTrackToCardItem([res]));
           setHeading(res.name || "Track");
           setImage(res.album?.images?.[0]?.url || "");
           setAlt(res.name);
+          setContent({
+            type: "Track",
+            title: res.name,
+            artists: res.artists?.map((a: any) => a.name).join(", "),
+            owner: res.album?.label,
+            likes: null,
+            total: 1,
+            duration: formatTime(res.duration_ms),
+          });
         } else if (contentType === "episode") {
           const res = await sdk.episodes.get(id);
           console.log("res", res);
@@ -79,13 +112,32 @@ const PlayPage = () => {
           setHeading(res.name || "Episode");
           setImage(res.images?.[0]?.url || "");
           setAlt(res.name);
+          setContent({
+            type: "Episode",
+            title: res.name,
+            artists: res.artists?.map((a: any) => a.name).join(", "),
+            owner: res.album?.label,
+            likes: null,
+            total: 1,
+            duration: formatTime(res.duration_ms),
+          });
         } else if (contentType === "show") {
           const res = await sdk.shows.get(id);
+          console.log("res", res);
           const episodes = res.episodes?.items || [];
           setItems(mapTrackToCardItem(episodes));
           setHeading(res.name || "Show");
           setImage(res.images?.[0]?.url || "");
           setAlt(res.name);
+          setContent({
+            type: "Show",
+            title: res.name,
+            artists: res.artists?.map((a: any) => a.name).join(", "),
+            owner: res.album?.label,
+            likes: null,
+            total: 1,
+            duration: formatDuration(res.episodes?.items),
+          });
         }
       } catch (error) {
         console.error("Error fetching content:", error);
@@ -120,7 +172,6 @@ const PlayPage = () => {
         setIsPlaying(true);
       }
     } else {
-      // Stop current track before switching
       await pausePlayback(deviceId);
       await sdk.player.startResumePlayback(deviceId, undefined, [uri]);
       setCurrentlyPlayingUri(uri);

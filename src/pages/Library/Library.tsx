@@ -6,26 +6,8 @@ import PageLayout from "components/Layouts/PageLayout";
 import PageHeading from "./PageHeading";
 import { Card } from "components/Cards";
 import { PlaylistArtists } from "assets/PlaylistArtists";
-import { BlueGradient } from "styles/colors";
-
-export const Grid = styled.div`
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  padding-bottom: 40px;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  }
-
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
-
-  @media (max-width: 600px) {
-    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
-  }
-`;
+import { BluePurpleGradient } from "styles/colors";
+import { Grid } from "components/Grid";
 
 const LikedSongsCard = styled.a`
   display: flex;
@@ -33,8 +15,10 @@ const LikedSongsCard = styled.a`
   justify-content: space-between;
   grid-column: span 2;
   grid-row: span 1;
+  height: 100%;
+  width: 100%;
   border-radius: 5px;
-  background: ${BlueGradient};
+  background: ${BluePurpleGradient};
 `;
 
 const LikedDetails = styled.div`
@@ -47,7 +31,7 @@ const LikedDetails = styled.div`
 
 const ImageWrapper = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   margin-top: 30px;
 `;
 

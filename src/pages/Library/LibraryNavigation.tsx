@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   NightTextPrimary,
   NightTransparentPrimary,
@@ -10,16 +10,18 @@ const Tabs = styled.div`
   display: flex;
   gap: 20px;
   margin: 0 30px 30px;
+  flex-wrap: wrap;
 `;
 
-const Tab = styled.button`
+const Tab = styled.button<{ isActive: boolean }>`
   display: flex;
   flex: 1;
   padding: 17px 50px 17px 51px;
   justify-content: center;
   align-items: center;
   border-radius: 5px;
-  background-color: ${NightTransparentSecondary};
+  background-color: ${({ isActive }) =>
+    isActive ? NightTransparentPrimary : NightTransparentSecondary};
   color: ${NightTextPrimary};
   font-size: 16px;
   cursor: pointer;
@@ -54,11 +56,16 @@ const TabData = [
 ];
 
 const PageNavigation = () => {
+  const { pathname } = useLocation();
   const navigate = useNavigate();
   return (
     <Tabs>
       {TabData.map((tab, index) => (
-        <Tab key={index} onClick={() => navigate(tab.route)}>
+        <Tab
+          key={index}
+          onClick={() => navigate(tab.route)}
+          isActive={pathname === tab.route}
+        >
           {tab.name}
         </Tab>
       ))}

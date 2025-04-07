@@ -41,6 +41,7 @@ const TopElement = ({
                 content={<RightContent>{item.title}</RightContent>}
                 uri={item.uri}
                 onClick={onClick}
+                isHeading={false}
               />
             ))}
       </Grid>

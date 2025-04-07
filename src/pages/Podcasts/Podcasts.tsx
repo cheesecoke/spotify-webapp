@@ -1,24 +1,30 @@
 import { useEffect, useState } from "react";
+import styled from "@emotion/styled";
 import { useSpotify } from "hooks/useSpotify";
 import PageLayout from "components/Layouts/PageLayout";
 import PageHeading from "./PageHeading";
-import Carousel from "components/Carousel";
+import Card from "components/Cards/Card";
 import { useNavigate } from "react-router-dom";
 import { mapToCardItems } from "utils";
+import { Grid } from "components/Grid";
 
 const Podcasts = () => {
   const { sdk } = useSpotify();
   const navigate = useNavigate();
+  const [isLoadingData, setIsLoadingData] = useState(true);
   const [podcasts, setPodcasts] = useState<any[]>([]);
 
   useEffect(() => {
     const getPodcasts = async () => {
+      setIsLoadingData(true);
       if (!sdk) return;
       try {
         const res = await sdk.currentUser.episodes.savedEpisodes();
         setPodcasts(mapToCardItems(res.items, { unwrap: "episode" }));
       } catch (err) {
         console.error("Podcasts error:", err);
+      } finally {
+        setIsLoadingData(false);
       }
     };
 
@@ -36,9 +42,24 @@ const Podcasts = () => {
   };
 
   return (
-    <PageLayout pageHeading={<PageHeading />}>
-      <Carousel heading="Your Podcasts" items={podcasts} onClick={handlePlay} />
-      {/* TODO: More sections. */}
+    <PageLayout overflow={false} pageHeading={<PageHeading />}>
+      <Grid>
+        {isLoadingData || !podcasts || podcasts.length === 0
+          ? Array.from({ length: 20 }).map((_, index) => (
+              <Card key={`skeleton-${index}`} loading />
+            ))
+          : podcasts.map((item) => (
+              <Card
+                key={item.id}
+                imageUrl={item.image}
+                imageAlt={item.name}
+                title={item.name}
+                description={item.description}
+                uri={item.uri}
+                onClick={handlePlay}
+              />
+            ))}
+      </Grid>
     </PageLayout>
   );
 };
