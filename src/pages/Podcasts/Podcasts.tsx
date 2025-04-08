@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import styled from "@emotion/styled";
 import { useSpotify } from "hooks/useSpotify";
 import PageLayout from "components/Layouts/PageLayout";
 import PageHeading from "./PageHeading";
@@ -19,8 +18,8 @@ const Podcasts = () => {
       setIsLoadingData(true);
       if (!sdk) return;
       try {
-        const res = await sdk.currentUser.episodes.savedEpisodes();
-        setPodcasts(mapToCardItems(res.items, { unwrap: "episode" }));
+        const res = await sdk.currentUser.shows.savedShows();
+        setPodcasts(mapToCardItems(res.items, { unwrap: "show" }));
       } catch (err) {
         console.error("Podcasts error:", err);
       } finally {

@@ -2,12 +2,13 @@
 // This might be doing too much.
 export function mapToCardItems(
   items: any[],
-  config: { unwrap?: "episode" | "track" | "category" } = {},
+  config: { unwrap?: "show" | "episode" | "track" | "category" } = {},
 ) {
   return items.map((item) => {
     let itemType = item;
-
-    if (config.unwrap === "episode" && item.episode) {
+    if (config.unwrap === "show" && item.show) {
+      itemType = item.show;
+    } else if (config.unwrap === "episode" && item.episode) {
       itemType = item.episode;
     } else if (config.unwrap === "track" && item.track) {
       itemType = item.track;
@@ -27,7 +28,7 @@ export function mapToCardItems(
       title: itemType.trackTitle || itemType.name || itemType.title,
       image:
         itemType.image ||
-        itemType.images?.[0]?.url ||
+        itemType.images?.[1]?.url ||
         itemType.album?.images?.[0]?.url ||
         itemType.icons?.[0]?.url ||
         "",
