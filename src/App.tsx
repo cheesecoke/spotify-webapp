@@ -35,7 +35,7 @@ function App() {
             <Route path="album/:id" element={<PlayPage />} />
             <Route path="playlist/:id" element={<PlayPage />} />
             <Route path="track/:id" element={<PlayPage />} />
-            <Route path="podcast/:id" element={<PlayPage />} />
+            {/* <Route path="podcast/:id" element={<PlayPage />} /> */}
             <Route path="episode/:id" element={<PlayPage />} />
             <Route path="track/:id" element={<PlayPage />} />
             <Route path="show/:id" element={<PlayPage />} />

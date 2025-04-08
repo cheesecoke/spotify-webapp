@@ -24,7 +24,7 @@ export const Item = styled.div<{ isActive: boolean }>`
     color: ${NightTextSecondary};
   }
 
-  @media (max-width: 780px) {
+  @media (max-width: 840px) {
     padding: 0px;
   }
 `;
@@ -32,7 +32,7 @@ export const Item = styled.div<{ isActive: boolean }>`
 export const MobileMenu = styled.div`
   display: none;
 
-  @media (max-width: 780px) {
+  @media (max-width: 840px) {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -65,7 +65,7 @@ export const DesktopMenu = styled.div`
   gap: 20px;
   padding: 0 20px;
 
-  @media (max-width: 780px) {
+  @media (max-width: 840px) {
     display: none;
   }
 `;

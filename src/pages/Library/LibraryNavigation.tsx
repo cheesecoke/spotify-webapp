@@ -9,7 +9,7 @@ import {
 const Tabs = styled.div`
   display: flex;
   gap: 20px;
-  margin: 0 30px 30px;
+  margin: 30px 0;
   flex-wrap: wrap;
 `;
 

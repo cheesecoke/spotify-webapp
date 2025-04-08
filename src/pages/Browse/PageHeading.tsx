@@ -1,16 +1,12 @@
-import styled from "@emotion/styled";
-
-const Wrapper = styled.h3`
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: normal;
-  margin: 0 30px;
-`;
+import { BaseLayout } from "components/Layouts/ContentLayout";
 
 // TODO: Update greeting to reflect time of day.
 const PageHeading = () => {
-  return <Wrapper>Browse all</Wrapper>;
+  return (
+    <BaseLayout>
+      <h1>Browse all</h1>
+    </BaseLayout>
+  );
 };
 
 export default PageHeading;

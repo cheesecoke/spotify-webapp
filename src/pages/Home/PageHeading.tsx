@@ -1,12 +1,12 @@
-import styled from "@emotion/styled";
-
-const Wrapper = styled.h1`
-  margin: 0px 30px;
-`;
+import { BaseLayout } from "components/Layouts/ContentLayout";
 
 // TODO: Update greeting to reflect time of day.
 const PageHeading = () => {
-  return <Wrapper>Good Morning</Wrapper>;
+  return (
+    <BaseLayout>
+      <h1>Good Morning</h1>
+    </BaseLayout>
+  );
 };
 
 export default PageHeading;

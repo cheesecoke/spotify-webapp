@@ -12,6 +12,14 @@ export const NavBarContainer = styled.nav`
   height: 80px;
   padding: 0 30px;
   background-color: ${NightBackgroundPrimary};
+
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+
+  @media (min-width: 1400px) {
+    padding: 20px 0 0 0;
+  }
 `;
 
 export const NavRight = styled.div`

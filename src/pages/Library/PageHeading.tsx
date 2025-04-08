@@ -1,16 +1,12 @@
-import styled from "@emotion/styled";
 import LibraryNavigation from "./LibraryNavigation";
-
-export const Heading = styled.h1`
-  margin: 0 30px;
-`;
+import { BaseLayout } from "components/Layouts/ContentLayout";
 
 const PageHeading = () => {
   return (
-    <>
+    <BaseLayout>
       <LibraryNavigation />
-      <Heading>Playlist</Heading>
-    </>
+      <h1>Playlist</h1>
+    </BaseLayout>
   );
 };
 

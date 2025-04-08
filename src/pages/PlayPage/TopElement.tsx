@@ -13,6 +13,13 @@ const Wrapper = styled.h1`
   flex-direction: row;
   gap: 20px;
   padding: 20px 30px 0px 30px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+
+  @media (min-width: 1400px) {
+    padding: 20px 0 0 0;
+  }
 `;
 
 const PlayButton = styled.button`

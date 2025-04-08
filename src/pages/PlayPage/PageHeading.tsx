@@ -15,6 +15,16 @@ const Wrapper = styled.div`
   box-shadow: 0px 150px 200px 0px rgba(49, 109, 166, 0.15);
 `;
 
+const Container = styled.div`
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+
+  @media (min-width: 1400px) {
+    padding: 0;
+  }
+`;
+
 const PageHeading = ({
   image,
   alt,
@@ -26,12 +36,14 @@ const PageHeading = ({
 }) => {
   return (
     <Wrapper>
-      <HorizontalCard
-        isHeading={true}
-        image={image}
-        alt={alt}
-        content={<HeroContent {...content} />}
-      />
+      <Container>
+        <HorizontalCard
+          isHeading={true}
+          image={image}
+          alt={alt}
+          content={<HeroContent {...content} />}
+        />
+      </Container>
     </Wrapper>
   );
 };
