@@ -1,64 +1,76 @@
-import { useEffect, useState } from "react";
+// /Users/chasecole/personal-work/spotify-webapp/src/pages/ShowDetails/ShowDetails.tsx
 import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { useSpotify } from "hooks/useSpotify";
-import { usePlaybackControls } from "hooks/usePlayBackControls";
+import { usePlaybackControls } from "hooks/usePlaybackControls";
 import PageLayout from "components/Layouts/PageLayout";
 import PageHeading from "./PageHeading";
 import TopElement from "./TopElement";
 import ShowsList from "./ShowsList";
-import { handleShow, handleTrack } from "helpers";
+import { handleShow } from "helpers";
 import TopElementSkeleton from "./TopElementSkeleton";
+
+interface ShowData {
+  items: { [key: string]: any }[];
+  image?: string;
+  alt?: string;
+  content?: string;
+  description?: string;
+}
 
 const ShowDetails = () => {
   const { sdk, loading } = useSpotify();
   const { id } = useParams();
 
-  const [items, setItems] = useState<any[]>([]);
-  const [image, setImage] = useState("");
-  const [alt, setAlt] = useState("");
-  const [showDescription, setShowDescription] = useState("");
-  const [content, setContent] = useState({});
+  const { data: showData, isLoading: isShowLoading } = useQuery<ShowData>({
+    queryKey: ["showDetails", id],
+    queryFn: async () => {
+      if (!sdk) throw new Error("SDK not available");
+      return new Promise((resolve, reject) => {
+        handleShow(sdk, id!, (data: any) => {
+          resolve(data);
+        });
+      });
+    },
+    enabled: !!sdk && !!id && !loading,
+    staleTime: 300000, // 5 minutes
+  });
 
-  const { handleTopPlay, handleTrackPlay, handlePause, onShuffle, onMore } =
-    usePlaybackControls(items);
-
-  useEffect(() => {
-    if (!sdk || loading || !id) return;
-    const handler = handleShow;
-    if (!handler) return;
-
-    handler(sdk, id, ({ items, image, alt, description, content }: any) => {
-      setItems(items);
-      setImage(image);
-      setAlt(alt);
-      setShowDescription(description);
-      setContent(content);
-    });
-  }, [sdk, loading, id]);
+  const { handleTopPlay, handleTrackPlay, handlePause } = usePlaybackControls(
+    showData?.items || [],
+  );
 
   return (
     <PageLayout
       overflow={false}
       pageHeading={
-        items.length > 0 ? (
-          <PageHeading image={image} alt={alt} content={content} />
+        showData && showData.items && showData.items.length > 0 ? (
+          <PageHeading
+            image={showData.image || ""}
+            alt={showData.alt}
+            content={showData.content}
+          />
         ) : null
       }
       topElement={
-        loading || items.length > 0 ? (
+        isShowLoading ||
+        (showData && showData.items && showData.items.length > 0) ? (
           <TopElement
-            lastestEpisode={items[0]}
-            showDescription={showDescription}
+            lastestEpisode={showData?.items?.[0]}
+            showDescription={showData?.description || ""}
             onPlay={handleTopPlay}
             onPause={handlePause}
-            onMore={onMore}
           />
         ) : (
           <TopElementSkeleton />
         )
       }
     >
-      <ShowsList shows={items} onPlay={handleTrackPlay} onPause={handlePause} />
+      <ShowsList
+        shows={showData?.items || []}
+        onPlay={handleTrackPlay}
+        onPause={handlePause}
+      />
     </PageLayout>
   );
 };

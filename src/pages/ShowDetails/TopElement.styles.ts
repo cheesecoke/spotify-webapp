@@ -58,8 +58,9 @@ export const Heading = styled.h2`
 `;
 
 export const PodcastDescription = styled.p`
-  white-space: normal;
-  word-break: break-word;
+  overflow: hidden;
+  overflow-y: scroll;
+  max-height: 250px;
   margin-bottom: 4px;
   color: ${NightTextSecondary};
 

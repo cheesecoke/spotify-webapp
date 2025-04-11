@@ -1,5 +1,5 @@
 import { useSpotifyPlayer } from "context/PlayerProvider";
-import { ChevronRightIcon, MoreIcon, PlayIcon, PauseIcon } from "assets/icons";
+import { ChevronRightIcon, PlayIcon, PauseIcon } from "assets/icons";
 import { BaseLayout } from "components/Layouts/ContentLayout";
 import { Title } from "./HeroContent.styles";
 import { Description } from "./CardContent.styles";
@@ -8,7 +8,6 @@ import {
   LeftWrapper,
   RightWrapper,
   Controls,
-  DateTime,
   SubTitle,
   Heading,
   PodcastDescription,
@@ -35,8 +34,10 @@ const TopElement = ({
       <Wrapper>
         <LeftWrapper>
           <SubTitle>Latest episode</SubTitle>
-          <Title>{lastestEpisode.title}</Title>
-          <Description>{lastestEpisode.description}</Description>
+          {lastestEpisode && <Title>{lastestEpisode.title}</Title>}
+          {lastestEpisode && (
+            <Description>{lastestEpisode.description}</Description>
+          )}
           <Controls>
             {isPlaying ? (
               <PauseButton onClick={onPause}>
@@ -45,7 +46,6 @@ const TopElement = ({
             ) : (
               <PlayButton
                 onClick={() => {
-                  console.log("Playing episode:", lastestEpisode.uri);
                   return onPlay(lastestEpisode.uri);
                 }}
               >
@@ -53,10 +53,10 @@ const TopElement = ({
               </PlayButton>
             )}
             <EpisodeProgress
-              date={lastestEpisode.releaseDate}
-              status={lastestEpisode.status}
-              resumePoint={lastestEpisode.resumePoint}
-              totalMs={lastestEpisode.totalMs}
+              date={lastestEpisode && lastestEpisode.releaseDate}
+              status={lastestEpisode && lastestEpisode.status}
+              resumePoint={lastestEpisode && lastestEpisode.resumePoint}
+              totalMs={lastestEpisode && lastestEpisode.totalMs}
             />
           </Controls>
         </LeftWrapper>

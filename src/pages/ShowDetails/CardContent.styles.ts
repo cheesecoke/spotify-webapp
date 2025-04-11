@@ -4,6 +4,7 @@ import { NightTextSecondary } from "styles/colors";
 export const ContentContainer = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   gap: 10px;
   height: 100%;
 `;
