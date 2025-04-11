@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useSpotify } from "hooks/useSpotify";
 import { getRecentlyPlayed } from "api/spotify/recently-played";
 import { mapToCardItems } from "utils";
@@ -12,13 +12,6 @@ const Home = () => {
   const { sdk, loading } = useSpotify();
   const navigate = useNavigate();
 
-  const [isLoadingData, setIsLoadingData] = useState(true);
-  const [recentlyPlayed, setRecentlyPlayed] = useState<any>(null);
-  const [topItems, setTopItems] = useState<any[]>([]);
-  const [topMixes, setTopMixes] = useState<any[]>([]);
-  const [topArtistName, setTopArtistName] = useState<string>("");
-  const [topArtistSearch, setTopArtistSearch] = useState<any[]>([]);
-
   const handlePlay = (uri?: string) => {
     console.log("uri", uri);
     if (!uri) return;
@@ -29,40 +22,61 @@ const Home = () => {
     }
   };
 
-  useEffect(() => {
-    if (!sdk || loading) return;
+  interface TopItemsData {
+    items: ReturnType<typeof mapToCardItems>;
+    topArtist?: { name: string };
+  }
 
-    const loadData = async () => {
-      setIsLoadingData(true);
-
-      try {
-        // CAROUSEL 1
+  const { data: topItemsData, isLoading: isLoadingTopItems } =
+    useQuery<TopItemsData>({
+      queryKey: ["topItems"],
+      queryFn: async () => {
         const res = await sdk.currentUser.topItems("tracks", "short_term", 6);
-        setTopItems(mapToCardItems(res.items, { unwrap: "track" }));
-        const topArtist = res.items[0].artists[0];
-        const artistName = topArtist.name;
-        setTopArtistName(artistName);
-        const moreArtist = await sdk.search(artistName, ["artist"]);
-        setTopArtistSearch(
-          mapToCardItems(moreArtist.artists.items, { unwrap: "category" }),
-        );
+        const items = mapToCardItems(res.items, { unwrap: "track" });
+        const topArtist = res.items[0]?.artists[0];
+        return { items, topArtist };
+      },
+      enabled: !!sdk && !loading,
+      staleTime: 300000,
+    });
 
-        // CAROUSEL 2
-        const playlistsRes = await sdk.currentUser.playlists.playlists(10);
-        setTopMixes(mapToCardItems(playlistsRes.items, { unwrap: "category" }));
+  const topArtistName = topItemsData?.topArtist?.name || "";
 
-        // CAROUSEL 3
+  const { data: topArtistSearchData, isLoading: isLoadingArtistSearch } =
+    useQuery({
+      queryKey: ["topArtistSearch", topArtistName],
+      queryFn: async () => {
+        const moreArtist = await sdk.search(topArtistName, ["artist"]);
+        return mapToCardItems(moreArtist.artists.items, { unwrap: "category" });
+      },
+      enabled: !!sdk && !!topArtistName,
+    });
+
+  const { data: topMixesData, isLoading: isLoadingMixes } = useQuery({
+    queryKey: ["topMixes"],
+    queryFn: async () => {
+      const playlistsRes = await sdk.currentUser.playlists.playlists(10);
+      return mapToCardItems(playlistsRes.items, { unwrap: "category" });
+    },
+    enabled: !!sdk && !loading,
+  });
+
+  const { data: recentlyPlayedData, isLoading: isLoadingRecentlyPlayed } =
+    useQuery({
+      queryKey: ["recentlyPlayed"],
+      queryFn: async () => {
         const recent = await getRecentlyPlayed(sdk);
-        setRecentlyPlayed(mapToCardItems(recent, { unwrap: "track" }));
-      } catch (error) {
-        console.error("Error loading data:", error);
-      } finally {
-        setIsLoadingData(false);
-      }
-    };
+        return mapToCardItems(recent, { unwrap: "track" });
+      },
+      enabled: !!sdk && !loading,
+    });
 
-    loadData();
-  }, [sdk, loading]);
+  const isLoadingData =
+    loading ||
+    isLoadingTopItems ||
+    isLoadingArtistSearch ||
+    isLoadingMixes ||
+    isLoadingRecentlyPlayed;
 
   return (
     <PageLayout
@@ -71,7 +85,7 @@ const Home = () => {
         <TopElement
           onClick={handlePlay}
           loading={isLoadingData}
-          items={topItems}
+          items={topItemsData?.items}
         />
       }
     >
@@ -79,19 +93,19 @@ const Home = () => {
         loading={isLoadingData}
         onClick={handlePlay}
         heading={topArtistName ? `More like ${topArtistName}` : "Top Artist"}
-        items={topArtistSearch}
+        items={topArtistSearchData || []}
       />
       <Carousel
         loading={isLoadingData}
         onClick={handlePlay}
         heading="Your Top Mixes"
-        items={topMixes}
+        items={topMixesData || []}
       />
       <Carousel
         loading={isLoadingData}
         onClick={handlePlay}
         heading="Recently Played"
-        items={recentlyPlayed}
+        items={recentlyPlayedData || []}
       />
       <button
         onClick={() => {
