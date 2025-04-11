@@ -1,4 +1,3 @@
-// /Users/chasecole/personal-work/spotify-webapp/src/pages/ShowDetails/ShowDetails.tsx
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useSpotify } from "hooks/useSpotify";
