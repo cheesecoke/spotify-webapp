@@ -1,16 +1,12 @@
-import styled from "@emotion/styled";
 import PageNavigation from "pages/Library/LibraryNavigation";
-
-const Wrapper = styled.h1`
-  margin: 0px 30px;
-`;
+import { BaseLayout } from "components/Layouts/ContentLayout";
 
 const PageHeading = () => {
   return (
-    <>
+    <BaseLayout>
       <PageNavigation />
-      <Wrapper>Audiobooks</Wrapper>;
-    </>
+      <h1>Audiobooks</h1>;
+    </BaseLayout>
   );
 };
 
