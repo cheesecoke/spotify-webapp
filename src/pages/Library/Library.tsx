@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import styled from "@emotion/styled";
-import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useNavigateToPlayPage } from "hooks/useNavigateToPlayPage";
 import { useSpotify } from "hooks/useSpotify";
 import PageLayout from "components/Layouts/PageLayout";
 import PageHeading from "./PageHeading";
@@ -37,59 +37,28 @@ const ImageWrapper = styled.div`
 
 const Library = () => {
   const { sdk } = useSpotify();
-  const navigate = useNavigate();
-  const [isLoadingData, setIsLoadingData] = useState(true);
-  const [totalTracks, setTotalTracks] = useState<any[]>([]);
-  const [playlists, setPlaylists] = useState<
-    {
-      id: string;
-      owner?: string;
-      name: string;
-      image?: string;
-      href?: string;
-      description?: string;
-      uri?: string;
-    }[]
-  >([]);
+  const navigateToPlayPage = useNavigateToPlayPage();
 
-  useEffect(() => {
-    const getPlaylists = async () => {
-      setIsLoadingData(true);
+  const { data: LibraryData, isLoading: isLoadingData } = useQuery({
+    queryKey: ["playlists"],
+    queryFn: async () => {
       if (!sdk) return;
-      try {
-        const res = await sdk.currentUser.playlists.playlists();
-        const items = res.items.map((playlist: any) => ({
-          id: playlist.id,
-          name: playlist.name,
-          image: playlist.images?.[0]?.url || "",
-          description: playlist.description || playlist.owner?.display_name,
-          uri: playlist.uri,
-        }));
 
-        const resSavedTracks = await sdk.currentUser.tracks.savedTracks();
-        const totalTracks = resSavedTracks.total;
+      const res = await sdk.currentUser.playlists.playlists();
+      const items = res.items.map((playlist: any) => ({
+        id: playlist.id,
+        name: playlist.name,
+        image: playlist.images?.[0]?.url || "",
+        description: playlist.description || playlist.owner?.display_name,
+        uri: playlist.uri,
+      }));
 
-        setPlaylists(items);
-        setTotalTracks(totalTracks);
-      } catch (err) {
-        console.error("Library error:", err);
-      } finally {
-        setIsLoadingData(false);
-      }
-    };
+      const resSavedTracks = await sdk.currentUser.tracks.savedTracks();
+      const totalTracks = resSavedTracks.total;
 
-    getPlaylists();
-  }, [sdk]);
-
-  const handlePlay = (uri?: string) => {
-    console.log("uri", uri);
-    if (!uri) return;
-
-    const [type, id] = uri.split(":").slice(1); // ['track', '3n3Ppam7vgaVa1iaRUc9Lp']
-    if (type && id) {
-      navigate(`/${type}/${id}`);
-    }
-  };
+      return { items, totalTracks };
+    },
+  });
 
   return (
     <PageLayout overflow={false} pageHeading={<PageHeading />}>
@@ -105,14 +74,14 @@ const Library = () => {
           </ImageWrapper>
           <LikedDetails>
             <h1>Liked Songs</h1>
-            <p>{totalTracks} liked songs</p>
+            <p>{LibraryData?.totalTracks} liked songs</p>
           </LikedDetails>
         </LikedSongsCard>
-        {isLoadingData || !playlists || playlists.length === 0
+        {isLoadingData || !LibraryData || LibraryData.items.length === 0
           ? Array.from({ length: 20 }).map((_, index) => (
               <Card key={`skeleton-${index}`} loading />
             ))
-          : playlists.map((item) => (
+          : LibraryData.items.map((item) => (
               <Card
                 key={item.id}
                 imageUrl={item.image}
@@ -120,7 +89,7 @@ const Library = () => {
                 title={item.name}
                 description={item.description}
                 uri={item.uri}
-                onClick={handlePlay}
+                onClick={navigateToPlayPage}
               />
             ))}
       </Grid>
