@@ -6,26 +6,16 @@ import PageLayout from "components/Layouts/PageLayout";
 import Carousel from "components/Carousel";
 import PageHeading from "./PageHeading";
 import TopElement from "./TopElement";
-import { useNavigate } from "react-router-dom";
+import { useNavigateToPlayPage } from "hooks/useNavigateToPlayPage";
+
+interface TopItemsData {
+  items: ReturnType<typeof mapToCardItems>;
+  topArtist?: { name: string };
+}
 
 const Home = () => {
   const { sdk, loading } = useSpotify();
-  const navigate = useNavigate();
-
-  const handlePlay = (uri?: string) => {
-    console.log("uri", uri);
-    if (!uri) return;
-
-    const [type, id] = uri.split(":").slice(1); // ['track', '3n3Ppam7vgaVa1iaRUc9Lp']
-    if (type && id) {
-      navigate(`/${type}/${id}`);
-    }
-  };
-
-  interface TopItemsData {
-    items: ReturnType<typeof mapToCardItems>;
-    topArtist?: { name: string };
-  }
+  const navigateToPlayPage = useNavigateToPlayPage();
 
   const { data: topItemsData, isLoading: isLoadingTopItems } =
     useQuery<TopItemsData>({
@@ -83,7 +73,7 @@ const Home = () => {
       pageHeading={<PageHeading />}
       topElement={
         <TopElement
-          onClick={handlePlay}
+          onClick={navigateToPlayPage}
           loading={isLoadingData}
           items={topItemsData?.items}
         />
@@ -91,19 +81,19 @@ const Home = () => {
     >
       <Carousel
         loading={isLoadingData}
-        onClick={handlePlay}
+        onClick={navigateToPlayPage}
         heading={topArtistName ? `More like ${topArtistName}` : "Top Artist"}
         items={topArtistSearchData || []}
       />
       <Carousel
         loading={isLoadingData}
-        onClick={handlePlay}
+        onClick={navigateToPlayPage}
         heading="Your Top Mixes"
         items={topMixesData || []}
       />
       <Carousel
         loading={isLoadingData}
-        onClick={handlePlay}
+        onClick={navigateToPlayPage}
         heading="Recently Played"
         items={recentlyPlayedData || []}
       />

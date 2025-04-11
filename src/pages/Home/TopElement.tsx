@@ -25,7 +25,7 @@ const TopElement = ({
 }: {
   items: any;
   loading?: boolean;
-  onClick?: () => void;
+  onClick?: (uri: string) => void;
 }) => {
   return (
     <BaseLayout>
@@ -41,7 +41,7 @@ const TopElement = ({
                 alt={item.imageAlt}
                 content={<RightContent>{item.title}</RightContent>}
                 uri={item.uri}
-                onClick={onClick}
+                onClick={() => onClick && onClick(item.uri)}
                 isHeading={false}
               />
             ))}
