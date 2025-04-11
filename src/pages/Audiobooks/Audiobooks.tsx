@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useSpotify } from "hooks/useSpotify";
 import { useNavigate } from "react-router-dom";
 import PageLayout from "components/Layouts/PageLayout";
@@ -26,54 +26,46 @@ interface AudiobooksState {
 const Audiobooks = () => {
   const { sdk } = useSpotify();
   const navigate = useNavigate();
-  const [audiobooks, setAudiobooks] = useState<AudiobooksState>({
-    newAudiobooks: [],
-    buzzAudiobooks: [],
-  });
 
-  useEffect(() => {
-    const getAudiobooks = async () => {
-      if (!sdk) return;
+  const { data: audiobooksData, isLoading } = useQuery<AudiobooksState>({
+    queryKey: ["audiobooks"],
+    queryFn: async () => {
+      if (!sdk) throw new Error("SDK not available");
 
-      try {
-        const resNewAudiobooks = await sdk.search("new", ["audiobook"], {
-          limit: 20,
-        });
-        if (resNewAudiobooks.audiobooks.items.length === 0) {
-          const error = new Error("Failed to fetch New audiobooks");
-          (error as any).status = resNewAudiobooks.status;
-          throw error;
-        }
-        const newAudiobooks = mapToCardItems(resNewAudiobooks.audiobooks.items);
-
-        const resBuzz = await sdk.search("buzz", ["audiobook"], {
-          limit: 20,
-        });
-        if (resBuzz.audiobooks.items.length === 0) {
-          const error = new Error("Failed to fetch buzz audiobooks");
-          (error as any).status = resBuzz.status;
-          throw error;
-        }
-        const buzzAudiobooks = mapToCardItems(resBuzz.audiobooks.items);
-
-        setAudiobooks({
-          newAudiobooks,
-          buzzAudiobooks,
-        });
-      } catch (error: any) {
-        //TODO: Error page.
-        console.error("Error fetching audiobooks", error);
+      // Fetch "new" audiobooks
+      const resNewAudiobooks = await sdk.search("new", ["audiobook"], {
+        limit: 20,
+      });
+      if (resNewAudiobooks.audiobooks.items.length === 0) {
+        const error = new Error("Failed to fetch new audiobooks");
+        (error as any).status = resNewAudiobooks.status;
+        throw error;
       }
-    };
+      const newAudiobooks = mapToCardItems(resNewAudiobooks.audiobooks.items);
 
-    getAudiobooks();
-  }, [sdk]);
+      // Fetch "buzz" audiobooks
+      const resBuzz = await sdk.search("buzz", ["audiobook"], { limit: 20 });
+      if (resBuzz.audiobooks.items.length === 0) {
+        const error = new Error("Failed to fetch buzz audiobooks");
+        (error as any).status = resBuzz.status;
+        throw error;
+      }
+      const buzzAudiobooks = mapToCardItems(resBuzz.audiobooks.items);
+
+      return {
+        newAudiobooks,
+        buzzAudiobooks,
+      };
+    },
+    enabled: !!sdk,
+    staleTime: 300000,
+  });
 
   const handlePlay = (uri?: string) => {
     console.log("uri", uri);
     if (!uri) return;
 
-    const [type, id] = uri.split(":").slice(1); // ['track', '3n3Ppam7vgaVa1iaRUc9Lp']
+    const [type, id] = uri.split(":").slice(1); // e.g., ['track', '3n3Ppam7vgaVa1iaRUc9Lp']
     if (type && id) {
       navigate(`/${type}/${id}`);
     }
@@ -82,18 +74,21 @@ const Audiobooks = () => {
   return (
     <PageLayout overflow={true} pageHeading={<PageHeading />}>
       <Carousel
+        loading={isLoading}
         heading="Great first audiobooks"
-        items={audiobooks.newAudiobooks.slice(0, 10)}
+        items={audiobooksData?.newAudiobooks.slice(0, 10) || []}
         onClick={handlePlay}
       />
       <Carousel
+        loading={isLoading}
         heading="What's new"
-        items={audiobooks.newAudiobooks.slice(10, 20)}
+        items={audiobooksData?.newAudiobooks.slice(10, 20) || []}
         onClick={handlePlay}
       />
       <Carousel
+        loading={isLoading}
         heading="Buzzworthy"
-        items={audiobooks.buzzAudiobooks}
+        items={audiobooksData?.buzzAudiobooks || []}
         onClick={handlePlay}
       />
     </PageLayout>
