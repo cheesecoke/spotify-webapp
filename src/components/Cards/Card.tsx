@@ -34,8 +34,6 @@ const Card = ({
   const SetText = loading ? SkeletonText : Text;
 
   const handleClick = () => {
-    console.log("Card clicked");
-    console.log("URI:", uri);
     if (onClick && uri) {
       onClick(uri);
     }
