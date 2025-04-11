@@ -18,6 +18,7 @@ type CardProps = {
   onClick?: (uri?: string) => void;
   uri?: string;
   loading?: boolean;
+  flex?: boolean;
 };
 
 const Card = ({
@@ -28,6 +29,7 @@ const Card = ({
   onClick,
   uri,
   loading,
+  flex = true,
 }: CardProps) => {
   const SetImage = loading ? SkeletonImage : Image;
   const SetTitle = loading ? SkeletonTitle : Title;
@@ -40,7 +42,7 @@ const Card = ({
   };
 
   return (
-    <CardContainer onClick={handleClick}>
+    <CardContainer onClick={handleClick} flex={flex}>
       <SetImage src={imageUrl} alt={imageAlt} />
       <Section>
         <SetTitle>{title}</SetTitle>

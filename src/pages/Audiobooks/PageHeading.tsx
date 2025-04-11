@@ -5,7 +5,7 @@ const PageHeading = () => {
   return (
     <BaseLayout>
       <PageNavigation />
-      <h1>Audiobooks</h1>;
+      <h1>Audiobooks</h1>
     </BaseLayout>
   );
 };

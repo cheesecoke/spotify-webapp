@@ -55,6 +55,7 @@ const Carousel = ({ heading, items, onClick, loading }: CarouselProps) => {
                 description={item.description}
                 uri={item.uri}
                 onClick={() => onClick && onClick(item.uri)}
+                flex={false}
               />
             ))}
       </List>

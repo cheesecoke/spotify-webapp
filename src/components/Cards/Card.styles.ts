@@ -7,25 +7,63 @@ import {
 } from "styles/colors";
 import { SkeletonAnimation } from "styles/animations";
 
-export const CardContainer = styled.div`
+export const CardContainer = styled.div<{ flex?: boolean }>`
   display: flex;
   flex-direction: column;
-  align-items: left;
-  justify-content: center;
-  gap: 15px;
-  width: 160px;
+  width: ${({ flex }) => (flex ? "100%" : "180px")};
   cursor: pointer;
   min-height: 229px;
+  gap: 15px;
+  align-items: ${({ flex }) => (flex ? "center" : "none")};
+
+  @media (min-width: 1400px) {
+    width: ${({ flex }) => (flex ? "100%" : "200px")};
+  }
+
+  @media (max-width: 1400px) {
+    width: ${({ flex }) => (flex ? "100%" : "180px")};
+  }
+
+  @media (max-width: 1024px) {
+    width: ${({ flex }) => (flex ? "100%" : "180px")};
+  }
+
+  @media (max-width: 768px) {
+    width: ${({ flex }) => (flex ? "100%" : "160px")};
+  }
 `;
 
-export const Image = styled.img`
+export const Image = styled.img<{ flex?: boolean }>`
   width: 160px;
   height: 160px;
   object-fit: cover;
   border-radius: 5px;
+  align-self: ${({ flex }) => (flex ? "center" : "")};
+
+  @media (min-width: 1400px) {
+    width: 200px;
+    height: 200px;
+  }
+
+  @media (max-width: 1400px) {
+    width: 180px;
+    height: 180px;
+  }
+
+  @media (max-width: 1024px) {
+    width: 180px;
+    height: 180px;
+  }
+
+  @media (max-width: 768px) {
+    width: 160px;
+    height: 160px;
+  }
 `;
 
-export const Section = styled.div``;
+export const Section = styled.div`
+  width: 100%;
+`;
 
 export const Title = styled.h3`
   overflow: hidden;
