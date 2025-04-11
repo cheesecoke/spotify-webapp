@@ -132,6 +132,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         });
 
         playerInstance.addListener("ready", ({ device_id }) => {
+          console.log("Ready with Device ID", device_id);
           setDeviceId(String(device_id));
         });
 

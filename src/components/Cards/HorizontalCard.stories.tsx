@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { Meta, StoryObj } from "@storybook/react";
 import HorizontalCard from "./HorizontalCard";
-import HeroContent from "pages/PlayPage/HeroContent";
+import HeroContent from "@/pages/PlayPage/HeroContent";
 
 const content = {
   type: "Artist",

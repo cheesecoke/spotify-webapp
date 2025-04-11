@@ -12,6 +12,7 @@ import Artists from "./pages/Artists/Artists";
 import Albums from "./pages/Albums/Albums";
 import PlayPage from "./pages/PlayPage";
 import Category from "./pages/Category/Category";
+import ShowDetails from "./pages/ShowDetails";
 
 function App() {
   return (
@@ -35,11 +36,10 @@ function App() {
             <Route path="album/:id" element={<PlayPage />} />
             <Route path="playlist/:id" element={<PlayPage />} />
             <Route path="track/:id" element={<PlayPage />} />
-            <Route path="podcast/:id" element={<PlayPage />} />
-            <Route path="episode/:id" element={<PlayPage />} />
             <Route path="track/:id" element={<PlayPage />} />
-            <Route path="show/:id" element={<PlayPage />} />
+            <Route path="show/:id" element={<ShowDetails />} />
             <Route path="category/:id" element={<Category />} />
+            <Route path="ShowDetails" element={<ShowDetails />} />
           </Route>
         </Routes>
       </PlayerProvider>

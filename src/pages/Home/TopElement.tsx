@@ -14,7 +14,8 @@ const RightContent = styled.div`
   flex-wrap: wrap;
   align-items: center;
   padding: 20px;
-  text-align: left;
+  height: 100%;
+  text-align: center;
 `;
 
 const TopElement = ({

@@ -33,7 +33,7 @@ const HeroContent = ({
       >
         {type}
       </div>
-      <h1 style={{ fontSize: 32 }}>{title}</h1>
+      <h1 style={{ fontSize: 32, textAlign: "left" }}>{title}</h1>
       {artists && (
         <p style={{ fontSize: 14, color: "#aaa" }}>With {artists} and more</p>
       )}

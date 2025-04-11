@@ -2,14 +2,21 @@ import styled from "@emotion/styled";
 import { NightTransparentSecondary, SkeletonBackground } from "styles/colors";
 import { SkeletonAnimation } from "styles/animations";
 
-export const ItemWrapper = styled.div<{ isHeading?: boolean }>`
+export const ItemWrapper = styled.div<{
+  isHeading?: boolean;
+  backgroundColor?: string;
+}>`
   display: flex;
   width: 100%;
   max-height: ${({ isHeading }) => (isHeading ? "100%" : "360px")};
   flex-direction: row;
   box-sizing: border-box;
-  background-color: ${({ isHeading }) =>
-    isHeading ? "transparent" : NightTransparentSecondary};
+  background-color: ${({ isHeading, backgroundColor }) =>
+    isHeading
+      ? "transparent"
+      : backgroundColor
+        ? backgroundColor
+        : NightTransparentSecondary};
   text-align: center;
   border-radius: 5px;
   overflow: hidden;
@@ -26,9 +33,7 @@ export const Image = styled.img<{ isHeading?: boolean }>`
 `;
 
 export const RightWrapper = styled.div<{ isHeading?: boolean }>`
-  flex: 1;
-  display: flex;
-  color: white;
+  width: 100%;
 `;
 
 export const SkeletonImage = styled.div`

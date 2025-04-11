@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { HorizontalCard } from "components/Cards";
-import { GradientOne } from "styles/colors";
+import { GradientTwo, GradientTwoBoxShadow } from "styles/colors";
 import HeroContent from "./HeroContent";
 
 const Wrapper = styled.div`
@@ -11,8 +11,8 @@ const Wrapper = styled.div`
   height: 268px;
   padding: 0 30px;
   margin: 0;
-  background: ${GradientOne};
-  box-shadow: 0px 150px 200px 0px rgba(49, 109, 166, 0.15);
+  background: ${GradientTwo};
+  box-shadow: ${GradientTwoBoxShadow};
 `;
 
 const Container = styled.div`

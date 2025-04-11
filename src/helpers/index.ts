@@ -1,9 +1,13 @@
 import { mapTrackToCardItem, formatDuration, formatTime } from "utils";
 
-export const handleArtist = async (sdk: any, id: string, setState: any) => {
+export const handleArtist = async (
+  sdk: any,
+  id: string,
+  callBackSetState: any,
+) => {
   const res = await sdk.artists.topTracks(id);
   const firstTrack = res.tracks[0];
-  setState({
+  callBackSetState({
     items: mapTrackToCardItem(res.tracks),
     heading: firstTrack?.artists[0]?.name || "Top Tracks",
     image: firstTrack?.album?.images?.[1]?.url || "",
@@ -23,12 +27,17 @@ export const handleArtist = async (sdk: any, id: string, setState: any) => {
   });
 };
 
-export const handleAlbum = async (sdk: any, id: string, setState: any) => {
+export const handleAlbum = async (
+  sdk: any,
+  id: string,
+  callBackSetState: any,
+) => {
   const res = await sdk.albums.get(id);
+  console.log(res);
   const trackRes = await sdk.albums.tracks(id);
   const tracks = trackRes.items;
 
-  setState({
+  callBackSetState({
     items: mapTrackToCardItem(tracks),
     heading: res.name || "Album",
     image: res.images?.[0]?.url || "",
@@ -48,10 +57,14 @@ export const handleAlbum = async (sdk: any, id: string, setState: any) => {
   });
 };
 
-export const handlePlaylist = async (sdk: any, id: string, setState: any) => {
+export const handlePlaylist = async (
+  sdk: any,
+  id: string,
+  callBackSetState: any,
+) => {
   const res = await sdk.playlists.getPlaylist(id);
   const tracks = res.tracks.items.map((item) => item.track);
-  setState({
+  callBackSetState({
     items: mapTrackToCardItem(tracks),
     heading: res.name || "Playlist Tracks",
     image: res.images?.[0]?.url || "",
@@ -71,9 +84,13 @@ export const handlePlaylist = async (sdk: any, id: string, setState: any) => {
   });
 };
 
-export const handleTrack = async (sdk: any, id: string, setState: any) => {
+export const handleTrack = async (
+  sdk: any,
+  id: string,
+  callBackSetState: any,
+) => {
   const res = await sdk.tracks.get(id);
-  setState({
+  callBackSetState({
     items: mapTrackToCardItem([res]),
     heading: res.name || "Track",
     image: res.album?.images?.[0]?.url || "",
@@ -90,9 +107,13 @@ export const handleTrack = async (sdk: any, id: string, setState: any) => {
   });
 };
 
-export const handleEpisode = async (sdk: any, id: string, setState: any) => {
+export const handleEpisode = async (
+  sdk: any,
+  id: string,
+  callBackSetState: any,
+) => {
   const res = await sdk.episodes.get(id);
-  setState({
+  callBackSetState({
     items: mapTrackToCardItem([res]),
     heading: res.name || "Episode",
     image: res.images?.[0]?.url || "",
@@ -109,19 +130,41 @@ export const handleEpisode = async (sdk: any, id: string, setState: any) => {
   });
 };
 
-export const handleShow = async (sdk: any, id: string, setState: any) => {
+export const handleShow = async (
+  sdk: any,
+  id: string,
+  callBackSetState: any,
+) => {
   const res = await sdk.shows.get(id);
-  const episodes = res.episodes?.items || [];
-  setState({
-    items: mapTrackToCardItem(episodes),
-    heading: res.name || "Show",
+  console.log(res);
+  const items = res.episodes?.items || [];
+
+  const episodes = items.map((item: any) => ({
+    id: item.id,
+    type: item.type,
+    title: item.name,
+    description: item.description,
+    image: item.images?.[0]?.url || "",
+    alt: item.name,
+    time: item.duration_ms,
+    name: item.artists?.[0]?.name || "",
+    uri: item.uri,
+    href: item.href,
+    releaseDate: item.release_date,
+    resumePoint: item.resume_point,
+    totalMs: item.duration_ms,
+  }));
+
+  callBackSetState({
+    items: episodes,
     image: res.images?.[0]?.url || "",
     alt: res.name,
+    description: res.description,
     content: {
       type: "Show",
       title: res.name,
       artists: res.artists?.map((a: any) => a.name).join(", "),
-      owner: res.album?.label,
+      owner: res.publisher,
       likes: null,
       total: 1,
       duration: formatDuration(episodes),
