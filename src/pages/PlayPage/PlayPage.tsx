@@ -1,8 +1,10 @@
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useParams, useLocation } from "react-router-dom";
-import { useEffect, useState, useMemo } from "react";
-import { usePlaybackControls } from "hooks/usePlayBackControls";
+import { usePlaybackControls } from "hooks/usePlaybackControls";
 import { useSpotify } from "hooks/useSpotify";
 import PageLayout from "components/Layouts/PageLayout";
+import SkeletonPageHeading from "components/SkeletonPageHeading";
 import PageHeading from "./PageHeading";
 import TopElement from "./TopElement";
 import TrackList from "./TrackList";
@@ -14,6 +16,13 @@ import {
   handleEpisode,
 } from "helpers";
 
+interface PlayContent {
+  items: any[];
+  image: string;
+  alt: string;
+  content: Record<string, any>;
+}
+
 const PlayPage = () => {
   const { id } = useParams();
   const location = useLocation();
@@ -21,14 +30,6 @@ const PlayPage = () => {
     "/",
   )[1] as keyof typeof fetchHandlers;
   const { sdk, loading } = useSpotify();
-
-  const [items, setItems] = useState<any[]>([]);
-  const [heading, setHeading] = useState("");
-  const [image, setImage] = useState("");
-  const [alt, setAlt] = useState("");
-  const [content, setContent] = useState({});
-  const { handleTopPlay, handleTrackPlay, handlePause, onShuffle, onMore } =
-    usePlaybackControls(items);
 
   const fetchHandlers = useMemo(
     () => ({
@@ -41,25 +42,36 @@ const PlayPage = () => {
     [],
   );
 
-  useEffect(() => {
-    if (!sdk || loading || !id) return;
-    const handler = fetchHandlers[contentType];
-    if (!handler) return;
+  const { data: playContent, isLoading } = useQuery<PlayContent>({
+    queryKey: ["playPage", contentType, id],
+    queryFn: async () => {
+      if (!sdk) throw new Error("SDK not available");
+      return new Promise((resolve, reject) => {
+        const handler = fetchHandlers[contentType];
+        if (!handler) {
+          return reject(
+            new Error("No handler for content type: " + contentType),
+          );
+        }
+        handler(sdk, id!, (data: any) => resolve(data));
+      });
+    },
+    enabled: !!sdk && !!id && !loading,
+    staleTime: 300000,
+  });
 
-    handler(sdk, id, ({ items, heading, image, alt, content }: any) => {
-      setItems(items);
-      setHeading(heading);
-      setImage(image);
-      setAlt(alt);
-      setContent(content);
-    });
-  }, [sdk, loading, id, contentType, fetchHandlers]);
+  const { items = [], image = "", alt = "", content = {} } = playContent || {};
+
+  const { handleTopPlay, handleTrackPlay, handlePause, onShuffle, onMore } =
+    usePlaybackControls(items);
 
   return (
     <PageLayout
       overflow={false}
       pageHeading={
-        items.length > 0 ? (
+        isLoading || !playContent || playContent.items.length === 0 ? (
+          <SkeletonPageHeading />
+        ) : items.length > 0 ? (
           <PageHeading image={image} alt={alt} content={content} />
         ) : null
       }

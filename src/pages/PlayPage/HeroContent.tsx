@@ -1,12 +1,31 @@
 import styled from "@emotion/styled";
+import { NightTextSecondary } from "styles/colors";
+
 const HeroContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
+  height: 100%;
   width: 100%;
   margin: 0 20px;
   gap: 10px;
+`;
+
+const Type = styled.div`
+  font-size: 12;
+  text-transform: "uppercase";
+  font-weight: 600;
+`;
+
+const Title = styled.h1`
+  font-size: 32px;
+  text-align: left;
+`;
+
+const Subtitle = styled.p`
+  font-size: 14px;
+  color: ${NightTextSecondary};
 `;
 
 const HeroContent = ({
@@ -28,18 +47,12 @@ const HeroContent = ({
 }) => {
   return (
     <HeroContentWrapper>
-      <div
-        style={{ fontSize: 12, textTransform: "uppercase", fontWeight: 600 }}
-      >
-        {type}
-      </div>
-      <h1 style={{ fontSize: 32, textAlign: "left" }}>{title}</h1>
-      {artists && (
-        <p style={{ fontSize: 14, color: "#aaa" }}>With {artists} and more</p>
-      )}
-      <p style={{ fontSize: 14, color: "#aaa" }}>
+      <Type>{type}</Type>
+      <Title>{title}</Title>
+      {artists && <Subtitle>With {artists} and more</Subtitle>}
+      <Subtitle>
         {owner} • {likes?.toLocaleString()} likes • {total} songs • {duration}
-      </p>
+      </Subtitle>
     </HeroContentWrapper>
   );
 };

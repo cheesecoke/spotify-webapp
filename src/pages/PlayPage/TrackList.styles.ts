@@ -4,7 +4,6 @@ import {
   NightTextPrimary,
   SpotifyGreen,
   SkeletonBackground,
-  NightTransparentPrimary,
 } from "styles/colors";
 import { AnimatedOpacity } from "styles/animations";
 
