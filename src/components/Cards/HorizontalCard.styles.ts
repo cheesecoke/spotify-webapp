@@ -5,6 +5,7 @@ import { SkeletonAnimation } from "styles/animations";
 export const ItemWrapper = styled.div<{
   isHeading?: boolean;
   backgroundColor?: string;
+  responsive?: boolean;
 }>`
   display: flex;
   width: 100%;
@@ -21,15 +22,34 @@ export const ItemWrapper = styled.div<{
   border-radius: 5px;
   overflow: hidden;
   cursor: ${({ isHeading }) => (isHeading ? "default" : "pointer")};
+
+  ${({ responsive }) =>
+    responsive &&
+    `
+  @media (max-width: 768px) {
+    flex-direction: column;
+    max-height: auto;
+    gap: 20px;
+    `}
 `;
 
-export const Image = styled.img<{ isHeading?: boolean }>`
+export const Image = styled.img<{ isHeading?: boolean; responsive?: boolean }>`
   display: flex;
   width: ${({ isHeading }) => (isHeading ? "" : "100px")};
   height: ${({ isHeading }) => (isHeading ? "auto" : "100px")};
   max-height: ${({ isHeading }) => (isHeading ? "208px" : "100px")};
   flex-shrink: 0;
   border-radius: 5px 0px 0px 5px;
+
+  ${({ responsive }) =>
+    responsive &&
+    `
+  @media (max-width: 768px) {
+    width: 180px;
+    height: 180px;
+    align-self: center;
+  }
+  `}
 `;
 
 export const RightWrapper = styled.div<{ isHeading?: boolean }>`

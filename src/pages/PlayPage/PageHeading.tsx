@@ -13,6 +13,11 @@ const Wrapper = styled.div`
   margin: 0;
   background: ${GradientOne};
   box-shadow: 0px 150px 200px 0px rgba(49, 109, 166, 0.15);
+
+  @media (max-width: 768px) {
+    height: auto;
+    padding: 30px;
+  }
 `;
 
 const Container = styled.div`
@@ -42,6 +47,7 @@ const PageHeading = ({
           image={image}
           alt={alt}
           content={<HeroContent {...content} />}
+          responsive={true}
         />
       </Container>
     </Wrapper>

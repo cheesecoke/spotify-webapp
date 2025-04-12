@@ -16,9 +16,21 @@ const Header = styled.h3`
   flex-shrink: 0;
 `;
 
-//TODO: Global player to stop once playing.
-// UI for list item playing?? Icon switch?
-const ShowsList = ({ shows, onPlay, onPause }) => {
+interface ShowsListProps {
+  shows: {
+    image: string;
+    title: string;
+    uri: string;
+    releaseDate: string;
+    status: string;
+    description: string;
+    resumePoint: number;
+    totalMs: number;
+  }[];
+  onPlay: (uri: string) => void;
+}
+
+const ShowsList: React.FC<ShowsListProps> = ({ shows, onPlay }) => {
   return (
     <BaseLayout>
       <Container>

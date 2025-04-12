@@ -15,6 +15,7 @@ const HorizontalCard = ({
   uri,
   onClick,
   backgroundColor,
+  responsive = false,
 }: {
   isHeading?: boolean;
   image?: string;
@@ -24,6 +25,7 @@ const HorizontalCard = ({
   loading?: boolean;
   onClick?: (uri: string) => void;
   backgroundColor?: string;
+  responsive?: boolean;
 }) => {
   const SetImage = loading ? SkeletonImage : Image;
   const SetWrapper = loading ? SkeletonRightWrapper : RightWrapper;
@@ -39,8 +41,9 @@ const HorizontalCard = ({
       onClick={handleClick}
       isHeading={isHeading}
       backgroundColor={backgroundColor}
+      responsive={responsive}
     >
-      <SetImage {...{ src: image, alt, isHeading }} />
+      <SetImage {...{ src: image, alt, isHeading, responsive }} />
       <SetWrapper {...{ isHeading }}>{content}</SetWrapper>
     </ItemWrapper>
   );
