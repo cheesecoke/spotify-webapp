@@ -72,3 +72,7 @@ It has some casing issues in the App.tsx, but got the job done for creating page
 5. Chose to add navigation to all library pages.
 
 Thank you, and enjoy!
+
+---
+
+Mobile browsers (including iPad Safari) have limited support for the Spotify Web Playback SDK. According to Spotify’s documentation, the Web Playback SDK is designed for desktop browsers and isn’t officially supported on mobile devices. This is why, on an iPad, the playback functionality might fail and return 404 errors.
