@@ -9,6 +9,10 @@ export const ForwardBackContainer = styled.div`
   padding: 20px;
   align-items: flex-start;
   gap: 20px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const Button = styled.button`

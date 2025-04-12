@@ -16,10 +16,6 @@ export const NavBarContainer = styled.nav`
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;
-
-  @media (min-width: 1400px) {
-    padding: 20px 0 0 0;
-  }
 `;
 
 export const NavRight = styled.div`
@@ -27,7 +23,6 @@ export const NavRight = styled.div`
   align-items: center;
 `;
 
-// TODO: Profile Image.
 export const ProfileContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -49,6 +44,8 @@ export const Avatar = styled.div`
   align-items: center;
   height: 30px;
   width: 30px;
+  font-weight: bold;
+  line-height: 25px;
   border-radius: 50%;
   color: ${NightBackgroundPrimary};
   background-color: ${NightTextPrimary};

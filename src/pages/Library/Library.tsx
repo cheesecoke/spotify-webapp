@@ -12,6 +12,7 @@ import { Grid } from "components/Grid";
 const LikedSongsCard = styled.a`
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   justify-content: space-between;
   grid-column: span 2;
   grid-row: span 1;
@@ -19,6 +20,10 @@ const LikedSongsCard = styled.a`
   width: 100%;
   border-radius: 5px;
   background: ${BluePurpleGradient};
+
+  @media (max-width: 768px) {
+    grid-column: span 1;
+  }
 `;
 
 const LikedDetails = styled.div`

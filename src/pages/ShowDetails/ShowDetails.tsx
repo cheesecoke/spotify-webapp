@@ -8,6 +8,7 @@ import TopElement from "./TopElement";
 import ShowsList from "./ShowsList";
 import { handleShow } from "helpers";
 import TopElementSkeleton from "./TopElementSkeleton";
+import SkeletonPageHeading from "components/SkeletonPageHeading";
 
 interface ShowData {
   items: { [key: string]: any }[];
@@ -43,13 +44,16 @@ const ShowDetails = () => {
     <PageLayout
       overflow={false}
       pageHeading={
-        showData && showData.items && showData.items.length > 0 ? (
+        isShowLoading ||
+        (showData && showData.items && showData.items.length > 0) ? (
           <PageHeading
-            image={showData.image || ""}
-            alt={showData.alt}
-            content={showData.content}
+            image={showData?.image || ""}
+            alt={showData?.alt || ""}
+            content={showData?.content}
           />
-        ) : null
+        ) : (
+          <SkeletonPageHeading />
+        )
       }
       topElement={
         isShowLoading ||

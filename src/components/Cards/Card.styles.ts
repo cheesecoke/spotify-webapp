@@ -17,7 +17,7 @@ export const CardContainer = styled.div<{ flex?: boolean }>`
   align-items: ${({ flex }) => (flex ? "center" : "none")};
 
   @media (min-width: 1400px) {
-    width: ${({ flex }) => (flex ? "100%" : "200px")};
+    width: ${({ flex }) => (flex ? "100%" : "190px")};
   }
 
   @media (max-width: 1400px) {
@@ -41,8 +41,8 @@ export const Image = styled.img<{ flex?: boolean }>`
   align-self: ${({ flex }) => (flex ? "center" : "")};
 
   @media (min-width: 1400px) {
-    width: 200px;
-    height: 200px;
+    width: 190px;
+    height: 190px;
   }
 
   @media (max-width: 1400px) {

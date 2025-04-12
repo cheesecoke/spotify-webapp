@@ -25,7 +25,7 @@ export const ItemWrapper = styled.div<{
 
 export const Image = styled.img<{ isHeading?: boolean }>`
   display: flex;
-  width: ${({ isHeading }) => (isHeading ? "fit-content" : "100px")};
+  width: ${({ isHeading }) => (isHeading ? "" : "100px")};
   height: ${({ isHeading }) => (isHeading ? "auto" : "100px")};
   max-height: ${({ isHeading }) => (isHeading ? "208px" : "100px")};
   flex-shrink: 0;

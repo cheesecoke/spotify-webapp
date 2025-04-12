@@ -21,7 +21,7 @@ const PageNavigation = () => {
   ];
 
   return (
-    <div>
+    <>
       <MobileMenu>
         <HamburgerIconWrapper onClick={() => setIsOpen(!isOpen)}>
           <HamburgerIcon />
@@ -55,7 +55,7 @@ const PageNavigation = () => {
           </Item>
         ))}
       </DesktopMenu>
-    </div>
+    </>
   );
 };
 
