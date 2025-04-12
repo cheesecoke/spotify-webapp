@@ -28,8 +28,8 @@ export function mapToCardItems(
       title: itemType.trackTitle || itemType.name || itemType.title,
       image:
         itemType.image ||
-        itemType.images?.[0]?.url ||
         itemType.images?.[1]?.url ||
+        itemType.images?.[0]?.url ||
         itemType.album?.images?.[0]?.url ||
         itemType.icons?.[0]?.url ||
         null,

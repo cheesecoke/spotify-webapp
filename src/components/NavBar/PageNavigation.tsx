@@ -15,7 +15,7 @@ const PageNavigation = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
-    { label: "Home", path: "/home" },
+    { label: "Home", path: "/" },
     { label: "Browse", path: "/browse" },
     { label: "Library", path: "/library" },
   ];

@@ -84,8 +84,9 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     if (player) return;
 
     if (!sdk) {
-      console.warn("Spotify SDK not ready");
-      return;
+      console.warn("Spotify SDK not ready, waiting...");
+      const retry = setTimeout(() => {}, 500);
+      return () => clearTimeout(retry);
     }
 
     const token = sdk.getAccessToken();

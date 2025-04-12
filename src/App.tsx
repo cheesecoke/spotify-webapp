@@ -27,8 +27,8 @@ function App() {
           <Routes>
             {/* Protected Layout */}
             <Route path="/" element={<ProtectedLayout />}>
+              <Route path="/" element={<Home />} />
               <Route index element={<Home />} />
-              <Route path="home" element={<Home />} />
               <Route path="browse" element={<Browse />} />
               <Route path="library" element={<Library />} />
               <Route path="podcasts" element={<Podcasts />} />
