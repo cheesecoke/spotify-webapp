@@ -26,7 +26,7 @@ const ShowDetails = () => {
     queryKey: ["showDetails", id],
     queryFn: async () => {
       if (!sdk) throw new Error("SDK not available");
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         handleShow(sdk, id!, (data: any) => {
           resolve(data);
         });
@@ -70,9 +70,19 @@ const ShowDetails = () => {
       }
     >
       <ShowsList
-        shows={showData?.items || []}
+        shows={
+          showData?.items?.map((item) => ({
+            image: item.image || "",
+            title: item.title || "",
+            uri: item.uri || "",
+            releaseDate: item.releaseDate || "",
+            status: item.status || "",
+            description: item.description || "",
+            resumePoint: item.resumePoint || 0,
+            totalMs: item.totalMs || 0,
+          })) || []
+        }
         onPlay={handleTrackPlay}
-        onPause={handlePause}
       />
     </PageLayout>
   );

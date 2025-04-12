@@ -4,10 +4,15 @@ export function formatTime(ms: number) {
   const seconds = ((ms % 60000) / 1000).toFixed(0);
   return seconds === "60"
     ? minutes + 1 + ":00"
-    : minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+    : minutes + ":" + (Number(seconds) < 10 ? "0" : "") + seconds;
 }
 
-export function formatDuration(items: any[]) {
+interface TrackItem {
+  track?: { duration_ms?: number };
+  duration_ms?: number;
+}
+
+export function formatDuration(items: TrackItem[]) {
   const totalMs = items.reduce((acc, item) => {
     const ms = item.track?.duration_ms || item.duration_ms || 0;
     return acc + ms;

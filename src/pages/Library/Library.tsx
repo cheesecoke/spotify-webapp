@@ -40,6 +40,14 @@ const ImageWrapper = styled.div`
   margin-top: 30px;
 `;
 
+type PlaylistItem = {
+  id: string;
+  name: string;
+  image: string;
+  description: string;
+  uri: string;
+};
+
 const Library = () => {
   const { sdk } = useSpotify();
   const navigateToPlayPage = useNavigateToPlayPage();
@@ -83,10 +91,10 @@ const Library = () => {
           </LikedDetails>
         </LikedSongsCard>
         {isLoadingData || !LibraryData || LibraryData.items.length === 0
-          ? Array.from({ length: 20 }).map((_, index) => (
+          ? Array.from({ length: 20 }).map((_, index: number) => (
               <Card key={`skeleton-${index}`} loading />
             ))
-          : LibraryData.items.map((item) => (
+          : LibraryData.items.map((item: PlaylistItem) => (
               <Card
                 key={item.id}
                 imageUrl={item.image}

@@ -6,6 +6,14 @@ import PageHeading from "./PageHeading";
 import { Card } from "components/Cards";
 import { Grid } from "components/Grid";
 
+interface Artist {
+  id: string;
+  name: string;
+  image: string;
+  description: string;
+  uri: string;
+}
+
 const Artists = () => {
   const { sdk } = useSpotify();
   const navigateToPlayPage = useNavigateToPlayPage();
@@ -31,13 +39,13 @@ const Artists = () => {
     <PageLayout overflow={false} pageHeading={<PageHeading />}>
       <Grid>
         {isLoading || !artists || artists.length === 0
-          ? Array.from({ length: 20 }).map((_, index) => (
+          ? Array.from({ length: 20 }).map((_, index: number) => (
               <Card key={`skeleton-${index}`} loading />
             ))
-          : artists.map((item) => (
+          : artists.map((item: Artist) => (
               <Card
                 key={item.id}
-                imageUrl={item.image || null}
+                imageUrl={item.image || undefined}
                 imageAlt={item.name}
                 title={item.name}
                 description={item.description}

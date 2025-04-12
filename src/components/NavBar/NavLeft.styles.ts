@@ -49,7 +49,7 @@ export const DropdownContainer = styled.div<{ isOpen: boolean }>`
   ${AnimatedOpacity}
 `;
 
-export const SignOutButton = styled.div`
+export const SignOutButton = styled.button`
   width: 65px;
   color: ${NightTextSecondary};
   &:hover {

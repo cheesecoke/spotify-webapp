@@ -1,5 +1,5 @@
 import EpisodeProgress from "./EpisodeProgress";
-import { CheckMark } from "assets/icons/CheckMark";
+import { CheckMark } from "assets/icons";
 import {
   ContentContainer,
   LeftWrapper,

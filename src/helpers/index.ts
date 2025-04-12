@@ -62,7 +62,7 @@ export const handlePlaylist = async (
   callBackSetState: any,
 ) => {
   const res = await sdk.playlists.getPlaylist(id);
-  const tracks = res.tracks.items.map((item) => item.track);
+  const tracks = res.tracks.items.map((item: { track: any }) => item.track);
   callBackSetState({
     items: mapTrackToCardItem(tracks),
     heading: res.name || "Playlist Tracks",

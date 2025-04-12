@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { Meta, StoryObj } from "@storybook/react";
 import HorizontalCard from "./HorizontalCard";
-import HeroContent from "@/pages/PlayPage/HeroContent";
+import HeroContent from "pages/PlayPage/HeroContent";
 
 const content = {
   type: "Artist",
@@ -10,7 +10,7 @@ const content = {
   owner: "Sam Fisher",
   likes: 22,
   total: 10,
-  duration: null,
+  duration: undefined,
 };
 
 const Wrapper = styled.div`

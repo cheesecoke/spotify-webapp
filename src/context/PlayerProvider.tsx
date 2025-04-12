@@ -1,7 +1,7 @@
 declare global {
   interface Window {
     onSpotifyWebPlaybackSDKReady?: () => void;
-    Spotify: typeof Spotify;
+    Spotify: Spotify;
   }
 
   interface SpotifyPlayerOptions {
@@ -16,7 +16,7 @@ declare global {
   }
 
   type Spotify = {
-    Player: SpotifyPlayer;
+    Player: new (options: SpotifyPlayerOptions) => SpotifyPlayer;
   };
 }
 
@@ -24,14 +24,13 @@ import {
   createContext,
   useContext,
   useEffect,
-  useRef,
   useState,
   ReactNode,
 } from "react";
 import { useSpotify } from "hooks/useSpotify";
 
 interface PlayerContextValue {
-  player: Spotify["Player"] | null;
+  player: SpotifyPlayer | null;
   deviceId: string | null;
   currentlyPlayingUri: string | null;
   setCurrentlyPlayingUri: (uri: string | null) => void;
@@ -56,14 +55,13 @@ export const useSpotifyPlayer = () => useContext(PlayerContext);
 
 export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const { sdk } = useSpotify();
-  const [player, setPlayer] = useState<Spotify.Player | null>(null);
+  const [player, setPlayer] = useState<SpotifyPlayer | null>(null);
   const [progress, setProgress] = useState<number>(0);
   const [deviceId, setDeviceId] = useState<string | null>(null);
   const [currentlyPlayingUri, setCurrentlyPlayingUri] = useState<string | null>(
     null,
   );
   const [isPlaying, setIsPlaying] = useState(false);
-  const tokenRef = useRef<string | null>(null);
   const pausePlayback = async (deviceId: string) => {
     if (!sdk || !deviceId) return;
 
@@ -108,9 +106,15 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       }
 
       window.onSpotifyWebPlaybackSDKReady = () => {
+        interface PlayerInstanceOptions {
+          name: string;
+          getOAuthToken: (cb: (token: string) => void) => void;
+          volume: number;
+        }
+
         const playerInstance = new window.Spotify.Player({
           name: "Web Playback SDK",
-          getOAuthToken: async (cb) => {
+          getOAuthToken: async (cb: (token: string) => void) => {
             try {
               const tokenRes = await sdk.getAccessToken();
               if (tokenRes?.access_token) {
@@ -123,7 +127,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
             }
           },
           volume: 0.5,
-        });
+        } as PlayerInstanceOptions);
 
         playerInstance.addListener("ready", ({ device_id }) => {
           setDeviceId(String(device_id));

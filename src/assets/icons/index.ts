@@ -9,3 +9,4 @@ export { MoreIcon } from "./MoreIcon";
 export { PlayIcon } from "./PlayIcon";
 export { PauseIcon } from "./PauseIcon";
 export { ShuffleIcon } from "./ShuffleIcon";
+export { CheckMark } from "./CheckMark";
