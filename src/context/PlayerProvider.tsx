@@ -37,7 +37,8 @@ interface PlayerContextValue {
   setCurrentlyPlayingUri: (uri: string | null) => void;
   isPlaying: boolean;
   setIsPlaying: (isPlaying: boolean) => void;
-  pausePlayback: (deviceId: string) => Promise<void>; // <- Add this
+  pausePlayback: (deviceId: string) => Promise<void>;
+  progress: number;
 }
 
 const PlayerContext = createContext<PlayerContextValue>({
@@ -48,6 +49,7 @@ const PlayerContext = createContext<PlayerContextValue>({
   isPlaying: false,
   setIsPlaying: () => {},
   pausePlayback: async () => {},
+  progress: 0,
 });
 
 export const useSpotifyPlayer = () => useContext(PlayerContext);
@@ -55,6 +57,7 @@ export const useSpotifyPlayer = () => useContext(PlayerContext);
 export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const { sdk } = useSpotify();
   const [player, setPlayer] = useState<Spotify.Player | null>(null);
+  const [progress, setProgress] = useState<number>(0);
   const [deviceId, setDeviceId] = useState<string | null>(null);
   const [currentlyPlayingUri, setCurrentlyPlayingUri] = useState<string | null>(
     null,
@@ -80,6 +83,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
+    if (player) return;
+
     if (!sdk) {
       console.warn("Spotify SDK not ready");
       return;
@@ -92,24 +97,15 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
 
     const loadPlayer = async () => {
-      if (!sdk || typeof sdk.getAccessToken !== "function") {
-        console.warn("Spotify SDK not ready");
-        return;
+      const existingScript = document.querySelector(
+        'script[src="https://sdk.scdn.co/spotify-player.js"]',
+      );
+      if (!existingScript) {
+        const script = document.createElement("script");
+        script.src = "https://sdk.scdn.co/spotify-player.js";
+        script.async = true;
+        document.body.appendChild(script);
       }
-
-      const tokenRes = await sdk.getAccessToken();
-      const token = tokenRes?.access_token;
-      if (!token) {
-        console.warn("No access token available");
-        return;
-      }
-
-      tokenRef.current = token;
-
-      const script = document.createElement("script");
-      script.src = "https://sdk.scdn.co/spotify-player.js";
-      script.async = true;
-      document.body.appendChild(script);
 
       window.onSpotifyWebPlaybackSDKReady = () => {
         const playerInstance = new window.Spotify.Player({
@@ -117,9 +113,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
           getOAuthToken: async (cb) => {
             try {
               const tokenRes = await sdk.getAccessToken();
-              console.log("Token fetched from SDK", tokenRes);
               if (tokenRes?.access_token) {
-                console.log("Access token:", tokenRes.access_token);
                 cb(tokenRes.access_token);
               } else {
                 console.error("No access token returned by SDK");
@@ -132,7 +126,6 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         });
 
         playerInstance.addListener("ready", ({ device_id }) => {
-          console.log("Ready with Device ID", device_id);
           setDeviceId(String(device_id));
         });
 
@@ -140,6 +133,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
           if (!state) return;
           setIsPlaying(!state.paused);
           setCurrentlyPlayingUri(state.track_window.current_track?.uri ?? null);
+          setProgress(state.position_ms);
         });
 
         playerInstance.connect().then((success) => {
@@ -153,7 +147,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     };
 
     loadPlayer();
-  }, [sdk]);
+  }, [sdk, player]);
 
   return (
     <PlayerContext.Provider
@@ -165,6 +159,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         isPlaying,
         setIsPlaying,
         pausePlayback,
+        progress,
       }}
     >
       {children}

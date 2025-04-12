@@ -43,7 +43,7 @@ const Card = ({
 
   return (
     <CardContainer onClick={handleClick} flex={flex}>
-      <SetImage src={imageUrl} alt={imageAlt} />
+      <SetImage src={imageUrl || undefined} alt={imageAlt} />
       <Section>
         <SetTitle>{title}</SetTitle>
         <SetText>{description}</SetText>

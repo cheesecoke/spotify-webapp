@@ -14,6 +14,7 @@ import Albums from "./pages/Albums/Albums";
 import PlayPage from "./pages/PlayPage";
 import Category from "./pages/Category/Category";
 import ShowDetails from "./pages/ShowDetails";
+import GlobalPlayer from "./components/GlobalPlayer";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,7 @@ function App() {
               <Route path="ShowDetails" element={<ShowDetails />} />
             </Route>
           </Routes>
+          <GlobalPlayer />
         </QueryClientProvider>
       </PlayerProvider>
     </SpotifyProvider>

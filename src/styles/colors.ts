@@ -17,6 +17,8 @@ export const SpotifyGreen = "#1ed760";
 //Gradient
 export const BluePurpleGradient =
   "linear-gradient(118deg, #3d2aeb 14.12%, #898adf 97.08%)";
+export const BluePurpleGradientOpacity =
+  "linear-gradient(118deg, rgba(61, 42, 235, 0.8) 14.12%, rgba(137, 138, 223, 0.8) 97.08%)";
 export const GradientOne =
   "linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.40) 100%), #316DA6";
 export const GradientTwo =

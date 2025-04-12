@@ -97,21 +97,6 @@ const Home = () => {
         heading="Recently Played"
         items={recentlyPlayedData || []}
       />
-      <button
-        onClick={() => {
-          localStorage.clear();
-          window.location.href = "/login";
-        }}
-        style={{
-          marginTop: "2rem",
-          padding: "0.5rem 1rem",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
-      >
-        Sign Out
-      </button>
     </PageLayout>
   );
 };

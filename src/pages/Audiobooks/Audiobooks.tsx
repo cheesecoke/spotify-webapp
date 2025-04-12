@@ -62,7 +62,6 @@ const Audiobooks = () => {
   });
 
   const handlePlay = (uri?: string) => {
-    console.log("uri", uri);
     if (!uri) return;
 
     const [type, id] = uri.split(":").slice(1); // e.g., ['track', '3n3Ppam7vgaVa1iaRUc9Lp']

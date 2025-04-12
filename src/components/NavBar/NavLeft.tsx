@@ -25,8 +25,6 @@ const NavLeft = () => {
     window.location.href = "/login";
   };
 
-  console.log(isSignOutOpen);
-
   return (
     <Container>
       <SearchIconContainer>

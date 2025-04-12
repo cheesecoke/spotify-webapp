@@ -33,7 +33,6 @@ export const handleAlbum = async (
   callBackSetState: any,
 ) => {
   const res = await sdk.albums.get(id);
-  console.log(res);
   const trackRes = await sdk.albums.tracks(id);
   const tracks = trackRes.items;
 
@@ -136,7 +135,6 @@ export const handleShow = async (
   callBackSetState: any,
 ) => {
   const res = await sdk.shows.get(id);
-  console.log(res);
   const items = res.episodes?.items || [];
 
   const episodes = items.map((item: any) => ({

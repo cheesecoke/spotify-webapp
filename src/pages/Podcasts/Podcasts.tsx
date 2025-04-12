@@ -23,7 +23,6 @@ const Podcasts = () => {
   });
 
   const handlePlay = (uri?: string) => {
-    console.log("uri", uri);
     if (!uri) return;
 
     const [type, id] = uri.split(":").slice(1); // ['show', 'someID']
