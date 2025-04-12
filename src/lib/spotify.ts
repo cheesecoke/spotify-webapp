@@ -16,6 +16,7 @@ export function getSpotifySDK() {
       "user-modify-playback-state",
       "user-read-playback-state",
       "app-remote-control",
+      "user-follow-read",
     ],
   );
 }

@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSpotify } from "hooks/useSpotify";
-import { getRecentlyPlayed } from "api/spotify/recently-played";
 import { mapToCardItems } from "utils";
 import PageLayout from "components/Layouts/PageLayout";
 import Carousel from "components/Carousel";
@@ -53,10 +52,10 @@ const Home = () => {
 
   const { data: recentlyPlayedData, isLoading: isLoadingRecentlyPlayed } =
     useQuery({
-      queryKey: ["recentlyPlayed"],
+      queryKey: ["getRecentlyPlayedTracks"],
       queryFn: async () => {
-        const recent = await getRecentlyPlayed(sdk);
-        return mapToCardItems(recent, { unwrap: "track" });
+        const recent = await sdk.player.getRecentlyPlayedTracks(10);
+        return mapToCardItems(recent.items, { unwrap: "track" });
       },
       enabled: !!sdk && !loading,
     });

@@ -11,15 +11,15 @@ const Artists = () => {
   const navigateToPlayPage = useNavigateToPlayPage();
 
   const { data: artists, isLoading } = useQuery({
-    queryKey: ["topArtists"],
+    queryKey: ["followedArtists"],
     queryFn: async () => {
       if (!sdk) throw new Error("SDK not available");
-      const res = await sdk.currentUser.topItems("artists", "long_term", 20);
-      return res.items.map((artist: any) => ({
+      const res = await sdk.currentUser.followedArtists(undefined, 20);
+      return res.artists.items.map((artist: any) => ({
         id: artist.id,
         name: artist.name,
         image: artist.images?.[0]?.url || "",
-        description: artist.description || artist.owner?.display_name || "",
+        description: artist.genres ? artist.genres.join(", ") : "",
         uri: artist.uri,
       }));
     },
@@ -37,7 +37,7 @@ const Artists = () => {
           : artists.map((item) => (
               <Card
                 key={item.id}
-                imageUrl={item.image}
+                imageUrl={item.image || null}
                 imageAlt={item.name}
                 title={item.name}
                 description={item.description}
