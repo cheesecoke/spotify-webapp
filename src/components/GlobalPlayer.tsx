@@ -19,9 +19,9 @@ const GlobalPlayer: React.FC = () => {
   const { currentlyPlayingUri, isPlaying, player, deviceId } =
     useSpotifyPlayer();
 
-  const trackId = currentlyPlayingUri
-    ? currentlyPlayingUri.split(":")[2]
-    : null;
+  const [uriType, trackId] = currentlyPlayingUri
+    ? currentlyPlayingUri.split(":").slice(1)
+    : [null, null];
 
   const { data: trackData } = useQuery({
     queryKey: ["currentlyPlayingTrack", trackId],
@@ -30,9 +30,19 @@ const GlobalPlayer: React.FC = () => {
         throw new Error("Player not ready or no track available.");
       }
       try {
-        return await sdk.tracks.get(trackId);
+        if (uriType === "track") {
+          return await sdk.tracks.get(trackId);
+        }
+        if (uriType === "episode") {
+          return await sdk.episodes.get(trackId);
+        }
+        if (uriType === "show") {
+          return await sdk.shows.get(trackId);
+        }
+        // Extend here for other types if needed.
+        throw new Error("Unsupported content type");
       } catch (err) {
-        console.error("Error fetching track data:", err);
+        console.error("Error fetching content data:", err);
         throw err;
       }
     },
