@@ -1,5 +1,5 @@
 
-This app is a an extension of the Spotify Web Playback SDK. To use the app you will need a premium Spotify account. 
+This app is an extension of the Spotify Web Playback SDK. To use the app, you will need the test account below. Spotify Developer's development mode only allows 25 users, which I have to set. If you would like an account added, please let me know.  
 
 Here is a test account that will be active for one month (started 04/12/2025)
 
